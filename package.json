@@ -1,0 +1,13 @@
+{
+    "name": "linkedin_search_scrape",
+    "version": "1.0.0",
+    "description": "linkedin scraper for search results",
+    "main": "src/main.js",
+    "scripts": {},
+    "author": "neliades",
+    "dependencies": {
+        "node": "^11.7.0",
+        "scrapedin": "^1.0.0"
+    },
+    "devDependencies": {}
+}
