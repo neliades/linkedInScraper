@@ -2,7 +2,7 @@
 const fs = require('fs');
 var path = require('path');
 const scrapedin = require('scrapedin')
-const {login} = require('../config.js');
+const {login} = require('../../config.js');
 const email = login.email;
 const password = login.password;
 const searchResults = ['bhanifin', 'neliades', 'louis-otter', 'kenny-polyak'];
@@ -14,7 +14,8 @@ const header = 'Name,URL,Headline,Location,Summary,Connections,Company Name(s),P
 let stream = fs.createWriteStream(`./linkedInProfiles.csv`, { flags: 'a' });
 stream.write(header);
 
-let addProfileToCSV = (URL, sample) => {
+let addProfileToCSV = (URL, sample, cb) => {
+    // console.log('addProfileToCSV evoked')
     let userInfo = {
         name : '',
         URL : '',
@@ -157,6 +158,7 @@ let addProfileToCSV = (URL, sample) => {
     //   console.log('writing...')
       stream.write(userInfoStr);
     //   console.log('complete')
+      cb();
 }
 
 
@@ -164,13 +166,16 @@ let addProfileToCSV = (URL, sample) => {
 
 
 async function lookupProfile(list, cb) {
+    // console.log('lookupProfile evoked')
     let profileScraper = await scrapedin({ email, password });
+    let last = false;
     for (let i = 0; i < list.length; i++) {
         let data = {};
         let URL = `https://www.linkedin.com${list[i]}`
         let profile = await profileScraper(URL)
         Object.assign(data, profile);
-        cb(URL, data);
+        if (i === list.length -1) last = true;
+        cb(URL, data, last);
     }
 }
 

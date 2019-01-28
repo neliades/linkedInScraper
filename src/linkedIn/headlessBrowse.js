@@ -1,8 +1,10 @@
 
 const puppeteer = require('puppeteer');
-const {login} = require(`../config.js`);
+const {login} = require(`../../config.js`);
 const {lookupProfile, addProfileToCSV} = require('./main.js');
-
+const searchURL = 'https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=FACETED_SEARCH';
+// const searchURL = `https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=FACETED_SEARCH&page=175`
+let i = 1;
 
 let sampleData = [ { url: '/in/indi/', text: '' },
   { url: '/in/indi/',
@@ -21,6 +23,7 @@ let sampleData = [ { url: '/in/indi/', text: '' },
     text: 'Kai Chen\n1st degree connection\n1st \n' } ]
 
 let lookupSearchResults = (data) => {
+    // console.log('lookupSearchResults evoked')
     let storage = {};
     let searchResults = [];
     //iterate over array
@@ -33,16 +36,25 @@ let lookupSearchResults = (data) => {
         storage[url] = url
       }
     }
-    
-    lookupProfile(searchResults, (URL, data) => {
-            addProfileToCSV(URL, data)
+    // console.log('search results ', searchResults)
+    lookupProfile(searchResults, (URL, data, last) => {
+            addProfileToCSV(URL, data, () => {
+                if (last) {
+                    i++
+                    // console.log('starting next group');
+                    let URL = searchURL + '&page=' + i;
+                    // console.log(URL)
+                    run(URL);
+                }
+            })
     })
 }
 
 
 
 
-async function run() {
+async function run(searchURL) {
+    // console.log('run evoked')
   const browser = await puppeteer.launch({
       //headless : false
   });
@@ -59,7 +71,7 @@ async function run() {
   await page.click(login.submitSelector);
   
   await page.waitForNavigation();
-  await page.goto('https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=FACETED_SEARCH');
+  await page.goto(searchURL);
   //await page.goto('https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=FACETED_SEARCH');
   
 //   let urls = await page.evaluate(() => {
@@ -78,7 +90,8 @@ async function run() {
 
 
 
-function run2 (second) {
+function run2 () {
+    // console.log('run2 evoked')
     return new Promise(async (resolve, reject) => {
         try {
             await page.evaluate(_ => {
@@ -107,7 +120,11 @@ function run2 (second) {
 }
 
 let results = await run2();
-return results;
+  if (results.length > 0) {
+    lookupSearchResults(results)
+  } else {
+      console.log('end of search results')
+  }
 
 // .then(run2(data)).then(console.log)
   //browser.close();
@@ -115,12 +132,21 @@ return results;
 //#ember62
 
 
+run(searchURL);
+// run(searchURL).then( (results) => {
+// //   console.log(results)
+//   if (results.length > 0) {
+//     lookupSearchResults(results)
 
-run().then( (results) => {
-  lookupSearchResults(results)
-});
+//   }
+// });
 
 
-
-
-
+//https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=FACETED_SEARCH&page=2
+//https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=FACETED_SEARCH
+//https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=FACETED_SEARCH
+//https://www.linkedin.com/search/results/people/?facetSchool=%5B%22163104%22%5D&origin=GLOBAL_SEARCH_HEADER
+//https://www.linkedin.com/search/results/people/?facetSchool=%5B%22163104%22%5D&origin=GLOBAL_SEARCH_HEADER&page=2
+//https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&&origin=GLOBAL_SEARCH_HEADER
+//https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=GLOBAL_SEARCH_HEADER
+//https://www.linkedin.com/search/results/people/?facetNetwork=%5B%22F%22%5D&facetSchool=%5B%22163104%22%5D&origin=GLOBAL_SEARCH_HEADER&page=1
