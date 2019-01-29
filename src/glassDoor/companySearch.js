@@ -4,7 +4,7 @@ const {login} = require(`./config.js`);
 
 // const companyName = 'google';
 
-const findCompanyInfo = (companyName) => {
+const findCompanyInfo = async function (companyName) {
 
     const everyChild = async function (page, before, after, elementProp) {
         let num = 1;
@@ -309,7 +309,7 @@ const findCompanyInfo = (companyName) => {
     while (children === true) {
         let selector = selectors.positionSalaryBefore + num + selectors.positionSalaryAfter;
         if (await page2.$(selector) !== null) {
-            console.log('num: ', num)
+            // console.log('num: ', num)
             let data = await findElementInfo(page2, selector, 'innerHTML');
             data = findInnerText(data).split(' ');
             let salary = {
@@ -321,7 +321,7 @@ const findCompanyInfo = (companyName) => {
             let position = false;
             let count = 0;
             let monthly = false;
-            console.log({data})
+            // console.log({data})
             for (let i = 0; i < data.length; i++) {
                 if (data[i] === `/mo`) {
                     monthly = true;
@@ -329,7 +329,7 @@ const findCompanyInfo = (companyName) => {
                 }
                 if (position === false) {
                     salary.position = salary.position + data[i];
-                    if((data[i+1][0] === '$')) position = true;
+                    if((i < data.length -1) && (data[i+1][0] === '$')) position = true;
                 } else if (data[i][0] === '$') {
                     if (count === 0) {
                         salary.average = data[i];
@@ -342,14 +342,14 @@ const findCompanyInfo = (companyName) => {
                 }
             }
             num++;
-            if (monthly === false) {
+            if (monthly === false && position === true) {
                 companyInfo.salary.push(salary);
             } else {
                 monthly = false;
             }
             if(companyInfo.salary.length >= 3) children = false;
         } else {
-            console.log('done')
+            // console.log('done')
             children = false;
         }
     }
@@ -357,15 +357,12 @@ const findCompanyInfo = (companyName) => {
     
     
     
-    console.log(companyInfo)
-    
-    
-    await page.waitForNavigation();
-    
+    return companyInfo;
+        
     }
     
     
-    run();
+    return await run();
 }
 
 
