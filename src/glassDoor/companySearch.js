@@ -4,7 +4,7 @@ const {login} = require(`./config.js`);
 
 // const companyName = 'google';
 
-const findCompanyInfo = async function (companyName) {
+const findCompanyInfo = async function (companyName, cb) {
 
     const everyChild = async function (page, before, after, elementProp) {
         let num = 1;
@@ -118,26 +118,39 @@ const findCompanyInfo = async function (companyName) {
     //login
       const signIn = '#TopNav > nav > div:nth-child(4) > a';
       const signInAlt = '#TopNav > nav > div > div > div.d-flex.justify-content-lg-end.align-items-baseline.order-lg-last.col-3 > div.locked-home-sign-in > a';
-      const usernameBox = '#LoginModal > div > div > div.signInModal.modalContents > div.signin > div:nth-child(4) > div.emailSignInForm > form > div:nth-child(3) > div > input';
-      const passwordBox = '#LoginModal > div > div > div.signInModal.modalContents > div.signin > div:nth-child(4) > div.emailSignInForm > form > div:nth-child(4) > div > input';
-      const submitSignIn = '#LoginModal > div > div > div.signInModal.modalContents > div.signin > div:nth-child(4) > div.emailSignInForm > form > button';
+    //   const usernameBox = '#LoginModal > div > div > div.signInModal.modalContents > div.signin > div:nth-child(4) > div.emailSignInForm > form > div:nth-child(3) > div > input';
+      const usernameBox = '#LoginModal > div > div > div.signInModal.modalContents > div.container.h-100p.d-flex.flex-column > div.signin.flex-grow-1 > div:nth-child(4) > div.emailSignInForm > form > div:nth-child(3) > div > input'
+    //   const passwordBox = '#LoginModal > div > div > div.signInModal.modalContents > div.signin > div:nth-child(4) > div.emailSignInForm > form > div:nth-child(4) > div > input';
+      const passwordBox = '#LoginModal > div > div > div.signInModal.modalContents > div.container.h-100p.d-flex.flex-column > div.signin.flex-grow-1 > div:nth-child(4) > div.emailSignInForm > form > div:nth-child(4) > div > input';
+    //   const submitSignIn = '#LoginModal > div > div > div.signInModal.modalContents > div.signin > div:nth-child(4) > div.emailSignInForm > form > button';
+      const submitSignIn = '#LoginModal > div > div > div.signInModal.modalContents > div.container.h-100p.d-flex.flex-column > div.signin.flex-grow-1 > div:nth-child(4) > div.emailSignInForm > form > button';
       
-      if (await page.$(signIn) !== null) {
-        await page.click(signIn);
-      } else {
-        await page.click(signInAlt);
+      try {
+          //await
+          if (await page.$(signIn) !== null) {
+            await page.click(signIn);
+          } else {
+            await page.click(signInAlt);
+          }
+        
+        
+          await page.click(usernameBox);
+          await page.keyboard.type(login.email);
+          
+          await page.click(passwordBox);
+          await page.keyboard.type(login.password);
+          
+          await page.click(submitSignIn);
+        
+          await page.waitForNavigation();
+      } catch(err) {
+        console.log('failed at:')
+        console.log()
+        console.log('login')
+        console.log()
+        console.log(err)
+        return;
       }
-    
-    
-      await page.click(usernameBox);
-      await page.keyboard.type(login.email);
-      
-      await page.click(passwordBox);
-      await page.keyboard.type(login.password);
-      
-      await page.click(submitSignIn);
-    
-      await page.waitForNavigation();
     
     
     const searchBox = '#sc\\2e keyword';
@@ -145,29 +158,34 @@ const findCompanyInfo = async function (companyName) {
     const typeSelection = '#SiteSrchTop > form > div > ul > li.reviews > span';
     const submitSearch = '#HeroSearchButton';
     
-    await page.click(searchBox);
-    await page.keyboard.type(companyName);
-    
-    await page.click(typeDropdown);
-    await page.click(typeSelection);
-    
-    
-    await page.click(submitSearch);
-    
-    
-    await page.waitForNavigation();
-    
-    
-    
+    try {
+        //await
+        
+            await page.click(searchBox);
+            await page.keyboard.type(companyName);
+            
+            await page.click(typeDropdown);
+            await page.click(typeSelection);
+            
+            
+            await page.click(submitSearch);
+            
+            
+            await page.waitForNavigation();
+
+    } catch(err) {
+      console.log('failed at:')
+      console.log()
+      console.log('search')
+      console.log()
+      console.log(err)
+      return;
+    }
     
     let pages = await browser.pages();
     let page2 = pages[2];
-    const firstResult = '#MainCol > div:nth-child(1) > div:nth-child(3) > div.empInfo.tbl > div.header.cell.info > div.margBotXs > a';
-    await page2.click(firstResult);
     
-    await page2.waitFor(5*1000);
-    const readMore = '#ExpandDesc';
-    await page2.click(readMore);
+    const firstResult = '#MainCol > div:nth-child(1) > div:nth-child(3) > div.empInfo.tbl > div.header.cell.info > div.margBotXs > a';
     let selectors = {
         name : '#EmpHeroAndEmpInfo > div.empInfo.tbl.hideHH > div.header.cell.info > h1',
         website : '#EmpBasicInfo > div:nth-child(1) > div > div:nth-child(1) > span > a',
@@ -177,11 +195,37 @@ const findCompanyInfo = async function (companyName) {
         description : '#EmpBasicInfo > div:nth-child(2) > div.margTop.empDescription',
         awards : '#EmpBasicInfo > div:nth-child(2) > div.table > div:nth-child(2)'
     }
-    
-    for (let key in selectors) {
-        let data = await findElementInfo(page2, selectors[key], 'innerHTML');
-        data = findInnerText(data);
-        companyInfo.overview[key] = data;
+    const readMore = '#ExpandDesc';
+
+    try {
+        //await
+        await page2.click(firstResult);
+        
+        await page2.waitFor(5*1000);
+        await page2.click(readMore);
+        
+        for (let key in selectors) {
+            let data = await findElementInfo(page2, selectors[key], 'innerHTML');
+            data = findInnerText(data);
+            if (key === 'size') {
+                let temp = '';
+                for (let i; data.length; i++) {
+                    if (isNaN(parseInt(data))) {
+                        data = data.slice(0, i);
+                        break;
+                    }
+                }
+            }
+            companyInfo.overview[key] = data;
+        }
+
+    } catch(err) {
+      console.log('failed at:')
+      console.log()
+      console.log('results')
+      console.log()
+      console.log(err)
+      return;
     }
     
     selectors = {
@@ -189,43 +233,82 @@ const findCompanyInfo = async function (companyName) {
         recommended : '#EmpStats_Recommend',
         CEOApproval : '#EmpStats_Approve'
     };
-    
-    for (let key in selectors) {
-        let data = await findElementInfo(page2, selectors[key], 'innerHTML');
-        data = findInnerText(data);
-        companyInfo.reviews[key] = data;
+    try {
+        //await
+        for (let key in selectors) {
+            let data = await findElementInfo(page2, selectors[key], 'innerHTML');
+            data = findInnerText(data);
+            if (key = 'recommended' || key === 'CEOApproval') {
+                data = data.split('%')[0];
+            }
+            companyInfo.reviews[key] = data;
+        }
+
+    } catch(err) {
+      console.log('failed at:')
+      console.log()
+      console.log('reviews')
+      console.log()
+      console.log(err)
+      return;
     }
     
     const showMore = '#ZCol > div.module.toggleable > a.toggleOn.strong.small';
-    await page2.click(showMore);
-    
-    selectors = {
-        locatedInNYC : '#ZCol > div.module.toggleable > ul'
-    };
-    
-    for (let key in selectors) {
-        let data = await findElementInfo(page2, selectors[key], 'innerHTML');
-        data = findInnerText(data);
-        companyInfo[key] = /New York/.test(data);
+        selectors = {
+            locatedInNYC : '#ZCol > div.module.toggleable > ul'
+        };
+    try {
+        //await
+        for (let key in selectors) {
+            let data = await findElementInfo(page2, selectors[key], 'innerHTML');
+            data = findInnerText(data);
+            companyInfo[key] = /New York/.test(data);
+        }
+        await page2.click(showMore);
+        
+    } catch(err) {
+      console.log('failed at:')
+      console.log()
+      console.log('locations')
+      console.log()
+      console.log(err)
+      return;
     }
+    
+    
+    
     
     selectors = {
         alsoViewed1 : `#ZCol > div.bucket.module.similarCompanies > div > ul:nth-child(1) > li:nth-child(`,
         alsoViewed2 : `) > div > div.companyName > a`
     };
+
     
     let num = 1
     let children = true;
-    while (children === true) {
-        let selector = selectors.alsoViewed1 + num + selectors.alsoViewed2;
-        if (await page2.$(selector) !== null) {
-            let data = await findElementInfo(page2, selector, 'innerHTML');
-            companyInfo.alsoViewed.push(data);
-            num++;
-        } else {
-            children = false;
+
+    try {
+        //await
+        while (children === true) {
+            let selector = selectors.alsoViewed1 + num + selectors.alsoViewed2;
+            if (await page2.$(selector) !== null) {
+                let data = await findElementInfo(page2, selector, 'innerHTML');
+                companyInfo.alsoViewed.push(data);
+                num++;
+            } else {
+                children = false;
+            }
         }
+
+    } catch(err) {
+      console.log('failed at:')
+      console.log()
+      console.log('also viewed')
+      console.log()
+      console.log(err)
+      return;
     }
+
     
     selectors = {
         interviewTab : '#EIProductHeaders > div > a.eiCell.cell.interviews',
@@ -242,47 +325,122 @@ const findCompanyInfo = async function (companyName) {
         difficulty : '#AllStats > div.cell.chartWrapper.difficulty > div > div > div.cell.middle.center.subtle.difficultyLabelWrapper > div'
     }
     
-    await page2.click(selectors.interviewTab);
-    await page2.waitFor(5*1000);
-    
-    await page2.click(selectors.interviewBox);
-    await page2.keyboard.type('Software Engineer');
-    
-    await page2.click(selectors.interviewButton);
-    await page2.click(selectors.more);
-    await page2.waitFor(2*1000);
-    
-    
-    for (let key in selectors.experience) {
-        let data = await findElementInfo(page2, selectors.experience[key], 'innerHTML');
-        data = findInnerText(data);
-        companyInfo.interview.experience[key] = data;
-    }
-    
-    
-    num = 2
-    children = true;
-    while (children === true) {
-        let selector = selectors.processBefore + num + selectors.processAfter;
-        if (await page2.$(selector) !== null) {
-            let data = await findElementInfo(page2, selector, 'innerHTML');
-            data = findInnerText(data).split(' ');
-            if (data.length > 2) {
-                let key = data.slice(0,data.length-2).join('');
-                let val = data.slice(data.length-2, data.length-1)[0];
-                companyInfo.interview.process.push({[key] : val});
-            }
-            num++;
-        } else {
-            children = false;
+    try {
+        //await
+        try {
+            //await
+            await page2.click(selectors.interviewTab);
+            await page2.waitFor(5*1000);
+        } catch(err) {
+          console.log('failed at:')
+          console.log()
+          console.log('interview tab')
+          console.log()
+          console.log(err)
+          return;
         }
+        
+        try {
+            //await
+            await page2.click(selectors.interviewBox);
+            await page2.keyboard.type('Software Engineer');
+        } catch(err) {
+          console.log('failed at:')
+          console.log()
+          console.log('interview box')
+          console.log()
+          console.log(err)
+          return;
+        }
+        
+        try {
+            //await
+            await page2.click(selectors.interviewButton);
+            await page2.click(selectors.more);
+            await page2.waitFor(2*1000);
+  
+        } catch(err) {
+          console.log('failed at:')
+          console.log()
+          console.log('interview button')
+          console.log()
+          console.log(err)
+          return;
+        }
+        
+        try {
+            //await
+            
+            for (let key in selectors.experience) {
+                let data = await findElementInfo(page2, selectors.experience[key], 'innerHTML');
+                data = findInnerText(data);
+                companyInfo.interview.experience[key] = data;
+            }
+  
+        } catch(err) {
+          console.log('failed at:')
+          console.log()
+          console.log('interview experience')
+          console.log()
+          console.log(err)
+          return;
+        }
+        
+        try {
+            //await
+            num = 2
+            children = true;
+            while (children === true) {
+                let selector = selectors.processBefore + num + selectors.processAfter;
+                if (await page2.$(selector) !== null) {
+                    let data = await findElementInfo(page2, selector, 'innerHTML');
+                    data = findInnerText(data).split(' ');
+                    if (data.length > 2) {
+                        let key = data.slice(0,data.length-2).join('');
+                        let val = data.slice(data.length-2, data.length-1)[0];
+                        companyInfo.interview.process.push({[key] : val});
+                    }
+                    num++;
+                } else {
+                    children = false;
+                }
+            }
+  
+        } catch(err) {
+          console.log('failed at:')
+          console.log()
+          console.log('interview process')
+          console.log()
+          console.log(err)
+          return;
+        }
+        
+        
+        try {
+            //await
+            let data = await findElementInfo(page2, selectors.difficulty, 'innerHTML');
+            data = findInnerText(data);
+            companyInfo.interview.difficulty = data;
+  
+        } catch(err) {
+          console.log('failed at:')
+          console.log()
+          console.log('interview difficulty')
+          console.log()
+          console.log(err)
+          return;
+        }
+        
+
+    } catch(err) {
+      console.log('failed at:')
+      console.log()
+      console.log('interviews')
+      console.log()
+      console.log(err)
+      return;
     }
-    
-    
-    
-    let data = await findElementInfo(page2, selectors.difficulty, 'innerHTML');
-    data = findInnerText(data);
-    companyInfo.interview.difficulty = data;
+
     
     
     selectors = {
@@ -293,70 +451,85 @@ const findCompanyInfo = async function (companyName) {
         positionSalaryAfter : ') > div'
     }
     
-    await page2.click(selectors.salariesTab);
-    await page2.waitFor(5*1000);
-    
-    await page2.click(selectors.salariesBox);
-    await page2.keyboard.type('Software Engineer');
-    
-    await page2.click(selectors.salariesButton);
-    await page2.waitFor(5*1000);
-    
-    
-    
-    num = 1
-    children = true;
-    while (children === true) {
-        let selector = selectors.positionSalaryBefore + num + selectors.positionSalaryAfter;
-        if (await page2.$(selector) !== null) {
-            // console.log('num: ', num)
-            let data = await findElementInfo(page2, selector, 'innerHTML');
-            data = findInnerText(data).split(' ');
-            let salary = {
-                position: '',
-                low : '',
-                high : '',
-                average : ''
-            }
-            let position = false;
-            let count = 0;
-            let monthly = false;
-            // console.log({data})
-            for (let i = 0; i < data.length; i++) {
-                if (data[i] === `/mo`) {
-                    monthly = true;
-                    break;
+    try {
+        //await
+        await page2.click(selectors.salariesTab);
+        await page2.waitFor(5*1000);
+        
+        await page2.click(selectors.salariesBox);
+        await page2.keyboard.type('Software Engineer');
+        
+        await page2.click(selectors.salariesButton);
+        await page2.waitFor(5*1000);
+        
+        num = 1
+        children = true;
+        while (children === true) {
+            let selector = selectors.positionSalaryBefore + num + selectors.positionSalaryAfter;
+            if (await page2.$(selector) !== null) {
+                // console.log('num: ', num)
+                let data = await findElementInfo(page2, selector, 'innerHTML');
+                data = findInnerText(data).split(' ');
+                let salary = {
+                    position: '',
+                    low : '',
+                    high : '',
+                    average : ''
                 }
-                if (position === false) {
-                    salary.position = salary.position + data[i];
-                    if((i < data.length -1) && (data[i+1][0] === '$')) position = true;
-                } else if (data[i][0] === '$') {
-                    if (count === 0) {
-                        salary.average = data[i];
-                    } else if (count === 1) {
-                        salary.low = data[i];
-                    } else if (count === 2) {
-                        salary.high = data[i];
+                let position = false;
+                let count = 0;
+                let monthly = false;
+                // console.log({data})
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i] === `/mo`) {
+                        monthly = true;
+                        break;
                     }
-                    count++;
+                    if (position === false) {
+                        salary.position = salary.position + data[i];
+                        if((i < data.length -1) && (data[i+1][0] === '$')) position = true;
+                    } else if (data[i][0] === '$') {
+                        if (count === 0) {
+                            salary.average = data[i];
+                        } else if (count === 1) {
+                            salary.low = data[i];
+                        } else if (count === 2) {
+                            salary.high = data[i];
+                        }
+                        count++;
+                    }
                 }
-            }
-            num++;
-            if (monthly === false && position === true) {
-                companyInfo.salary.push(salary);
+                num++;
+                if (monthly === false && position === true) {
+                    companyInfo.salary.push(salary);
+                } else {
+                    monthly = false;
+                }
+                if(companyInfo.salary.length >= 3) children = false;
             } else {
-                monthly = false;
+                // console.log('done')
+                children = false;
             }
-            if(companyInfo.salary.length >= 3) children = false;
-        } else {
-            // console.log('done')
-            children = false;
         }
+
+    } catch(err) {
+      console.log('failed at:')
+      console.log()
+      console.log('salaries')
+      console.log()
+      console.log(err)
+      return;
     }
+
     
     
     
     
+    
+    console.log(companyInfo)
+    if (cb) {
+        cb(companyInfo);
+    }
     return companyInfo;
         
     }
@@ -365,5 +538,5 @@ const findCompanyInfo = async function (companyName) {
     return await run();
 }
 
-
+// findCompanyInfo('Google');
 module.exports.findCompanyInfo = findCompanyInfo;

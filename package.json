@@ -6,6 +6,7 @@
     "scripts": {},
     "author": "neliades",
     "dependencies": {
+        "mysql": "^2.16.0",
         "node": "^11.7.0",
         "scrapedin": "^1.0.0"
     },

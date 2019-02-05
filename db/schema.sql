@@ -38,17 +38,67 @@ CREATE TABLE `companies` (
   `website` VARCHAR(250) NULL DEFAULT NULL,
   `size` INTEGER NULL DEFAULT NULL,
   `id_industries` INTEGER NULL DEFAULT NULL,
-  `competitorsFROMid_companies` INTEGER NULL DEFAULT NULL,
-  `description` VARCHAR(250) NULL DEFAULT NULL,
-  `rating` INTEGER NULL DEFAULT NULL,
+  `description` VARCHAR(1000) NULL DEFAULT NULL,
+  `rating` DECIMAL(6,1) NULL DEFAULT NULL,
   `recommended` INTEGER NULL DEFAULT NULL,
   `ceoApproval` INTEGER NULL DEFAULT NULL,
   `locatedInNyc` VARCHAR(250) NULL DEFAULT NULL,
-  `alsoViewedFROMid_companies` INTEGER NULL DEFAULT NULL,
   `positive` INTEGER NULL DEFAULT NULL,
   `neutral` INTEGER NULL DEFAULT NULL,
   `negative` INTEGER NULL DEFAULT NULL,
-  `difficulty` INTEGER NULL DEFAULT NULL,
+  `difficulty` DECIMAL(6,1) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'companies_competitors'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `companies_competitors`;
+		
+CREATE TABLE `companies_competitors` (
+  `id_companies` INTEGER NULL DEFAULT NULL,
+  `id_competitors` INTEGER NULL DEFAULT NULL
+);
+
+-- ---
+-- Table 'companies_alsoViewed'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `companies_alsoViewed`;
+		
+CREATE TABLE `companies_alsoViewed` (
+  `id_companies` INTEGER NULL DEFAULT NULL,
+  `id_alsoViewed` INTEGER NULL DEFAULT NULL
+);
+
+-- ---
+-- Table 'alsoViewed'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `alsoViewed`;
+		
+CREATE TABLE `alsoViewed` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(250) NULL DEFAULT NULL,
+  `id_companies` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
+-- ---
+-- Table 'competitors'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `competitors`;
+		
+CREATE TABLE `competitors` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(250) NULL DEFAULT NULL,
+  `id_companies` INTEGER NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -312,8 +362,6 @@ CREATE TABLE `companies_companyPositions` (
 -- ---
 
 ALTER TABLE `companies` ADD FOREIGN KEY (id_industries) REFERENCES `industries` (`id`);
-ALTER TABLE `companies` ADD FOREIGN KEY (competitorsFROMid_companies) REFERENCES `companies` (`id`);
-ALTER TABLE `companies` ADD FOREIGN KEY (alsoViewedFROMid_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `users_skills` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
 ALTER TABLE `users_skills` ADD FOREIGN KEY (id_skills) REFERENCES `skills` (`id`);
 ALTER TABLE `users_accomplishments` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
@@ -333,6 +381,10 @@ ALTER TABLE `companies_processes` ADD FOREIGN KEY (id_companies) REFERENCES `com
 ALTER TABLE `companies_processes` ADD FOREIGN KEY (id_processes) REFERENCES `processes` (`id`);
 ALTER TABLE `companies_companyPositions` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_companyPositions` ADD FOREIGN KEY (id_companyPositions) REFERENCES `companyPositions` (`id`);
+ALTER TABLE `companies_competitors` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
+ALTER TABLE `companies_competitors` ADD FOREIGN KEY (id_competitors) REFERENCES `competitors` (`id`);
+ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
+ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_alsoViewed) REFERENCES `alsoViewed` (`id`);
 
 -- ---
 -- Table Properties
