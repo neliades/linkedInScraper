@@ -6,4 +6,4 @@ node_modules
 linkedInProfiles.csv
 package-lock.json
 temp.sql
-helpers.js
+unusedHelpers.js
