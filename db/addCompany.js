@@ -9,11 +9,13 @@ const {insertQueryIfNotExists} = require('./helpers.js')
 const {updateOneFieldDB} = require('./helpers.js')
 const {findLastId} = require('./helpers.js')
 
+const {findCompanyInfo} = require('../src/glassDoor/companySearch.js')
+
 const connection = require('./connectToDb.js');
 
 
 
-const insertToDB = async function (companyInfo, results, specialQuery, cb) {
+const insertToDB = async function (companyInfo, results, cb) {
     // console.log('insertToDB invoked')
     let queryInfo = {};
     if (companyInfo) {
@@ -100,9 +102,6 @@ const insertToDB = async function (companyInfo, results, specialQuery, cb) {
             }
         }
     
-        if (specialQuery) {
-            queryInfo = specialQuery;
-        }
         
         let insertForeignAndWait = (propertyName) => {
                 // console.log('starting foreign and junctions: ', propertyName);
@@ -170,10 +169,12 @@ const insertToDB = async function (companyInfo, results, specialQuery, cb) {
             await insertForeignAndWait(propertyName);
         }
         await console.log('inserted company data');
+        if (cb) await cb();
     } else {
         console.log('no company data provided')
+        if (cb) cb();
     }
-    await connection.end();
+    // await connection.end();
     // console.log('queryInfo: ', queryInfo)
 }
 
@@ -183,13 +184,28 @@ const insertToDB = async function (companyInfo, results, specialQuery, cb) {
 
 
 const addCompanyIfNotExists = (companyInfo, cb) => {
-    checkIfExists(companyInfo, 'companies', 'name', companyInfo.overview.name, null, insertToDB);
+    return new Promise ((resolve) => {
+        checkIfExists(companyInfo, 'companies', 'name', companyInfo.overview.name, null, (companyInfo, results) => {
+            insertToDB(companyInfo, results, resolve)
+        });
+    })
 }
 
 // addCompanyIfNotExists(testData);
 
 
+const addListOfCompanies = (list) => {
+    return new Promise ( async (resolve) => {
+        for (let i = 0; i < list.length; i++) {
+            let companyInfo = await findCompanyInfo(list[i])
+            await addCompanyIfNotExists(companyInfo);
+        }
+        await resolve();
+    })
+}
+
 
 
 module.exports.addCompanyIfNotExists = addCompanyIfNotExists;
+module.exports.addListOfCompanies = addListOfCompanies;
 

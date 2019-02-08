@@ -51,7 +51,7 @@ const insertQuery = (tableName, fields, values, cb) => {
 
 const checkIfExistsInJunction = (tableName, fields, values, cbExists, cbNotExists) => {
     // console.log('checking junction for first two fields')
-    let sql = `SELECT * FROM ${tableName} WHERE ? = '${values[0]}' AND ? = '${values[1]}'`;
+    let sql = `SELECT * FROM ${tableName} WHERE ${fields[0]} = ? AND ${fields[1]} = ?`;
     connection.query(sql, [values[0], values[1]], (err, results) => {
         if(err) {
             // console.log(err)
