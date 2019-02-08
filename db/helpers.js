@@ -1,11 +1,10 @@
 const connection = require('./connectToDb.js');
 
 const checkIfExists = (companyInfo, tableName, field, value, cbExists, cbNotExists) => {
-
-    let sql = `SELECT * FROM ${tableName} WHERE ${field} = '${value}'`
-    connection.query(sql, null, (err, results) => {
+    let sql = `SELECT * FROM ${tableName} WHERE ${field} = (?)`
+    connection.query(sql, [[value]], (err, results) => {
         if(err) {
-            // console.log(err)
+            console.log(err)
             throw new Error("Error in checkIfExists", err)
           } else {
             if (results.length < 1) {
@@ -35,11 +34,12 @@ const checkIfExists = (companyInfo, tableName, field, value, cbExists, cbNotExis
 const insertQuery = (tableName, fields, values, cb) => {
     let sql = `INSERT INTO ${tableName} (${fields})
     VALUES (?)`;
+    // console.log()
     // console.log(sql);
     // console.log()
     connection.query(sql, [values], (err, results) => {
         if(err) {
-            // console.log(err)
+            console.log(err)
             throw new Error("Error in insertQuery", err)
           } else {
             // console.log(results);
@@ -51,8 +51,8 @@ const insertQuery = (tableName, fields, values, cb) => {
 
 const checkIfExistsInJunction = (tableName, fields, values, cbExists, cbNotExists) => {
     // console.log('checking junction for first two fields')
-    let sql = `SELECT * FROM ${tableName} WHERE ${fields[0]} = '${values[0]}' AND ${fields[1]} = '${values[1]}'`;
-    connection.query(sql, null, (err, results) => {
+    let sql = `SELECT * FROM ${tableName} WHERE ? = '${values[0]}' AND ? = '${values[1]}'`;
+    connection.query(sql, [values[0], values[1]], (err, results) => {
         if(err) {
             // console.log(err)
             throw new Error("Error in checkIfExistsInJunction", err)
@@ -102,10 +102,10 @@ const insertQueryIfNotExists = (tableName, fields, values, cb) => {
 
 const updateOneFieldDB = (tableName, fieldLookup, valueLookup, field, value, cb) => {
     let sql = `UPDATE ${tableName}
-    SET ${field} = ${value}
-    WHERE ${fieldLookup} = '${valueLookup}'`;
+    SET ${field} = ?
+    WHERE ${fieldLookup} = ?`;
 
-    connection.query(sql, null, (err, results) => {
+    connection.query(sql, [value, valueLookup], (err, results) => {
         if(err) {
             // console.log(err)
             throw new Error("Error in updateOneFieldDB", err)

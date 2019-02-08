@@ -1,5 +1,9 @@
 CREATE DATABASE IF NOT EXISTS LinkedInScraper;
 USE LinkedInScraper;
+
+SET collation_connection = 'utf8_general_ci';
+ALTER DATABASE LinkedInScraper CHARACTER SET utf8 COLLATE utf8_general_ci;
+
 -- ---
 -- Globals
 -- ---
@@ -20,7 +24,7 @@ CREATE TABLE `users` (
   `url` VARCHAR(250) NULL DEFAULT NULL,
   `headline` VARCHAR(250) NULL DEFAULT NULL,
   `location` VARCHAR(250) NULL DEFAULT NULL,
-  `summary` VARCHAR(250) NULL DEFAULT NULL,
+  `summary` VARCHAR(1000) NULL DEFAULT NULL,
   `connections` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
@@ -112,9 +116,9 @@ DROP TABLE IF EXISTS `positionsFROMcompanies`;
 CREATE TABLE `positionsFROMcompanies` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `position` VARCHAR(250) NULL DEFAULT NULL,
-  `range` VARCHAR(250) NULL DEFAULT NULL,
+  `startToEnd` VARCHAR(250) NULL DEFAULT NULL,
   `duration` VARCHAR(250) NULL DEFAULT NULL,
-  `description` VARCHAR(250) NULL DEFAULT NULL,
+  `description` VARCHAR(1000) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -170,8 +174,8 @@ CREATE TABLE `positionsFROMorganizations` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `position` VARCHAR(250) NULL DEFAULT NULL,
   `experience` VARCHAR(250) NULL DEFAULT NULL,
-  `description` VARCHAR(250) NULL DEFAULT NULL,
-  `range` VARCHAR(250) NULL DEFAULT NULL,
+  `description` VARCHAR(1000) NULL DEFAULT NULL,
+  `startToEnd` VARCHAR(250) NULL DEFAULT NULL,
   `duration` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
@@ -186,6 +190,7 @@ DROP TABLE IF EXISTS `skills`;
 CREATE TABLE `skills` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
+  `endorsements` INTEGER NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 
@@ -253,17 +258,32 @@ CREATE TABLE `users_schools` (
 );
 
 -- ---
--- Table 'users_companies'
+-- Table 'users_companiesFROMusers'
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `users_companies`;
+DROP TABLE IF EXISTS `users_companiesFROMusers`;
 		
-CREATE TABLE `users_companies` (
+CREATE TABLE `users_companiesFROMusers` (
   `id_users` INTEGER NULL DEFAULT NULL,
-  `id_companies` INTEGER NULL DEFAULT NULL,
+  `id_companiesFROMusers` INTEGER NULL DEFAULT NULL,
   `id_positionsFROMcompanies` INTEGER NULL DEFAULT NULL
 );
+
+-- ---
+-- Table 'companiesFROMusers'
+-- 
+-- ---
+
+DROP TABLE IF EXISTS `companiesFROMusers`;
+		
+CREATE TABLE `companiesFROMusers` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(250) NULL DEFAULT NULL,
+  `id_companies` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
 
 -- ---
 -- Table 'industries'
@@ -372,9 +392,10 @@ ALTER TABLE `users_organizations` ADD FOREIGN KEY (id_positionsFROMorganizations
 ALTER TABLE `users_schools` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
 ALTER TABLE `users_schools` ADD FOREIGN KEY (id_schools) REFERENCES `schools` (`id`);
 ALTER TABLE `users_schools` ADD FOREIGN KEY (id_degrees) REFERENCES `degrees` (`id`);
-ALTER TABLE `users_companies` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
-ALTER TABLE `users_companies` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
-ALTER TABLE `users_companies` ADD FOREIGN KEY (id_positionsFROMcompanies) REFERENCES `positionsFROMcompanies` (`id`);
+ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
+ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_companiesFROMusers) REFERENCES `companiesFROMusers` (`id`);
+ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_positionsFROMcompanies) REFERENCES `positionsFROMcompanies` (`id`);
+ALTER TABLE `companiesFROMusers` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_awards` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_awards` ADD FOREIGN KEY (id_awards) REFERENCES `awards` (`id`);
 ALTER TABLE `companies_processes` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
@@ -385,6 +406,37 @@ ALTER TABLE `companies_competitors` ADD FOREIGN KEY (id_companies) REFERENCES `c
 ALTER TABLE `companies_competitors` ADD FOREIGN KEY (id_competitors) REFERENCES `competitors` (`id`);
 ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_alsoViewed) REFERENCES `alsoViewed` (`id`);
+
+-- ---
+-- Table utf8 conversion
+-- ---
+
+ALTER TABLE accomplishments CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE alsoViewed  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE awards  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companies CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companiesFROMusers  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companies_alsoViewed  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companies_awards  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companies_companyPositions CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companies_competitors CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companies_processes CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE companyPositions  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE competitors CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE degrees CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE industries  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE organizations CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE positionsFROMcompanies  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE positionsFROMorganizations CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE processes CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE schools CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE skills  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE users CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE users_accomplishments CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE users_companiesFROMusers  CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE users_organizations CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE users_schools CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE users_skills CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 -- ---
 -- Table Properties
@@ -403,7 +455,7 @@ ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_alsoViewed) REFERENCES `a
 -- ALTER TABLE `users_accomplishments` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE `users_organizations` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE `users_schools` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- ALTER TABLE `users_companies` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+-- ALTER TABLE `users_companiesFROMusers` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE `industries` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE `awards` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- ALTER TABLE `processes` ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -420,7 +472,7 @@ ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_alsoViewed) REFERENCES `a
 -- ('','','','','','','');
 -- INSERT INTO `companies` (`id`,`name`,`website`,`size`,`id_industries`,`competitors(id_companies)`,`description`,`rating`,`recommended`,`ceoApproval`,`locatedInNyc`,`alsoViewed(id_companies)`,`positive`,`neutral`,`negative`,`difficulty`) VALUES
 -- ('','','','','','','','','','','','','','','','');
--- INSERT INTO `positionsFROMcompanies` (`id`,`position`,`range`,`duration`,`description`) VALUES
+-- INSERT INTO `positionsFROMcompanies` (`id`,`position`,`startToEnd`,`duration`,`description`) VALUES
 -- ('','','','','');
 -- INSERT INTO `schools` (`id`,`name`) VALUES
 -- ('','');
@@ -428,7 +480,7 @@ ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_alsoViewed) REFERENCES `a
 -- ('','','','');
 -- INSERT INTO `organizations` (`id`,`name`) VALUES
 -- ('','');
--- INSERT INTO `positionsFROMorganizations` (`id`,`position`,`experience`,`description`,`range`,`duration`) VALUES
+-- INSERT INTO `positionsFROMorganizations` (`id`,`position`,`experience`,`description`,`startToEnd`,`duration`) VALUES
 -- ('','','','','','');
 -- INSERT INTO `skills` (`id`,`name`) VALUES
 -- ('','');
@@ -442,7 +494,7 @@ ALTER TABLE `companies_alsoViewed` ADD FOREIGN KEY (id_alsoViewed) REFERENCES `a
 -- ('','','');
 -- INSERT INTO `users_schools` (`id_users`,`id_schools`,`id_degrees`) VALUES
 -- ('','','');
--- INSERT INTO `users_companies` (`id_users`,`id_companies`,`id_positionsFROMcompanies`) VALUES
+-- INSERT INTO `users_companiesFROMusers` (`id_users`,`id_companies`,`id_positionsFROMcompanies`) VALUES
 -- ('','','');
 -- INSERT INTO `industries` (`id`,`name`) VALUES
 -- ('','');

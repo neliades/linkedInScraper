@@ -6,6 +6,7 @@ const {login} = require('../../config.js');
 const email = login.email;
 const password = login.password;
 const searchResults = ['bhanifin', 'neliades', 'louis-otter', 'kenny-polyak'];
+const {addUserToDb} = require(`../../db/addUser.js`);
 
 const {sample} = require('../../sample.js')
 const {url} = require('../../sample.js')
@@ -18,45 +19,49 @@ const header = 'Name,URL,Headline,Location,Summary,Connections,Company Name(s),P
 let buildUserObject = (URL, sample, cb) => {
     // console.log('buildUserObject evoked')
     let userInfo = {
-        name : '',
-        URL : '',
-        headline : '',
-        location : '',
-        summary : '',
-        connections : '',
+        name : null,
+        URL : null,
+        headline : null,
+        location : null,
+        summary : null,
+        connections : null,
         companies : [
         //     {
-        //     name : '',
-        //     position : '',
-        //     range: '',
-        //     duration: '',
-        //     description: ''
+        //     name : null,
+        //     position : null,
+        //     range: null,
+        //     duration: null,
+        //     description: null
         // }
         ],
 
         schools : [
         // {
-        //     name: '',
-        //     degree : '',
-        //     start : '',
-        //     end : ''
+        //     name: null,
+        //     degree : null,
+        //     start : null,
+        //     end : null
         // }
         ],
 
         volunteering : [
         //{
-        //     position : '',
-        //     experience : '',
-        //     description : '',
-        //     range : '',
-        //     duration : ''
+        //     position : null,
+        //     experience : null,
+        //     description : null,
+        //     range : null,
+        //     duration : null
         // }
         ],
-        skills : [],
+        skills : [
+        // {
+        //     title : null,
+        //     numOfEndorsements : '0'
+        // }
+        ],
         accomplishments : []
     }
-    let count = 0;
-    let count2 = 0;
+
     if (sample.profile.name !== undefined) userInfo.name = sample.profile.name;
     userInfo.URL = URL;
     if (sample.profile.headline !== undefined) userInfo.headline = sample.profile.headline;
@@ -67,11 +72,11 @@ let buildUserObject = (URL, sample, cb) => {
     //for each company
     for (let i = 0;  i < sample.positions.length; i++) {
         let positionDetails = {
-            name : '',
-            position : '',
-            range: '',
-            duration: '',
-            description: ''
+            name : null,
+            position : null,
+            range: null,
+            duration: null,
+            description: null
         }
         //if there are multiple roles
         if (sample.positions[i].roles !== undefined) {
@@ -79,9 +84,9 @@ let buildUserObject = (URL, sample, cb) => {
             if (sample.positions[i].title !== undefined) positionDetails.name = sample.positions[i].title;
             if (sample.positions[i].description !== undefined) positionDetails.description = sample.positions[i].description;
             for (let j = 0; j < sample.positions[i].roles.length; j++) {
-                sample.positions[i].roles[j].title !== undefined ? positionDetails.position = sample.positions[i].roles[j].title : positionDetails.position = '';
-                sample.positions[i].roles[j].date1 !== undefined ? positionDetails.range = sample.positions[i].roles[j].date1 : positionDetails.range = '';
-                sample.positions[i].roles[j].date2 !== undefined ? positionDetails.duration = sample.positions[i].roles[j].date2 : positionDetails.duration = ''; 
+                sample.positions[i].roles[j].title !== undefined ? positionDetails.position = sample.positions[i].roles[j].title : positionDetails.position = null;
+                sample.positions[i].roles[j].date1 !== undefined ? positionDetails.range = sample.positions[i].roles[j].date1 : positionDetails.range = null;
+                sample.positions[i].roles[j].date2 !== undefined ? positionDetails.duration = sample.positions[i].roles[j].date2 : positionDetails.duration = null; 
                 userInfo.companies.push(Object.assign({}, positionDetails));
             }
         
@@ -100,10 +105,10 @@ let buildUserObject = (URL, sample, cb) => {
 
     for (let i = 0;  i < sample.educations.length; i++) {
         let schoolDetails = {
-            name: '',
-            degree : '',
-            start : '',
-            end : ''
+            name: null,
+            degree : null,
+            start : null,
+            end : null
         };
         if (sample.educations[i].title !== undefined) schoolDetails.name = sample.educations[i].title;
         if (sample.educations[i].degree !== undefined) schoolDetails.degree = sample.educations[i].degree;
@@ -115,11 +120,11 @@ let buildUserObject = (URL, sample, cb) => {
     
     for (let i = 0;  i < sample.volunteerExperience.length; i++) {
         let volunteerDetails = {
-            position : '',
-            experience : '',
-            description : '',
-            range : '',
-            duration : ''
+            position : null,
+            experience : null,
+            description : null,
+            range : null,
+            duration : null
         };
 
         if (sample.volunteerExperience[i].title !== undefined) volunteerDetails.position = sample.volunteerExperience[i].title;
@@ -133,7 +138,7 @@ let buildUserObject = (URL, sample, cb) => {
         
     for (let i = 0;  i < sample.skills.length; i++) {
         let skillsDetails = {
-            title : '',
+            title : null,
             numOfEndorsements : '0'
         }
         if (sample.skills[i].title !== undefined) skillsDetails.title = sample.skills[i].title;
@@ -148,7 +153,7 @@ let buildUserObject = (URL, sample, cb) => {
             userInfo.accomplishments.push(sample.accomplishments[i].items[j]);
         }
     }
-
+    console.log(userInfo.name)
       if (cb) cb(userInfo);
       return userInfo;
 }
@@ -157,7 +162,7 @@ let buildUserObject = (URL, sample, cb) => {
 
 
 
-async function lookupProfiles(list, cb) {
+async function lookupProfiles(list, cb, complete) {
     // console.log('lookupProfiles evoked')
     let profileScraper = await scrapedin({ email, password });
     for (let i = 0; i < list.length; i++) {
@@ -165,14 +170,27 @@ async function lookupProfiles(list, cb) {
         let URL = `https://www.linkedin.com${list[i]}`
         let profile = await profileScraper(URL)
         Object.assign(data, profile);
-        cb(URL, data);
+        await console.log('about to add user', i)
+        await cb(URL, data);
+        await console.log('just added user', i)
     }
+    await complete();
 }
 
 
-const handleProfiles = (searchResults, cb) => {
-    lookupProfiles(searchResults, (URL, data) => {
-        buildUserObject(URL, data, cb)
+const handleProfiles = (searchResults, cbEveryPage) => {
+    return new Promise ((resolve) => {
+        // cbEveryPage();
+        lookupProfiles(searchResults, async function (URL, data) {
+            return new Promise ((resolve) => {
+                buildUserObject(URL, data, (userInfo) => {
+                    addUserToDb(userInfo, resolve);
+                })
+            })
+        }, () => {
+            console.log('completed current page')
+            resolve();
+        })
     })
 }
 
