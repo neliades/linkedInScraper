@@ -165,6 +165,10 @@ let buildUserObject = (URL, sample, cb) => {
 async function lookupProfiles(list, cb, complete) {
     // console.log('lookupProfiles evoked')
     let profileScraper = await scrapedin({ email, password });
+    //=====================================================================================================================================================================
+    // Profile Scraper must be set equal to a new function that collects user info
+    //=====================================================================================================================================================================
+
     for (let i = 0; i < list.length; i++) {
         let data = {};
         let URL = `https://www.linkedin.com${list[i]}`
