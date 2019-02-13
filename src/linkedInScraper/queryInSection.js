@@ -47,21 +47,14 @@ const queryEachField = async (elementWithChildren, sectionOfSelectorsList) => {
 const queryInSection = async (page, sectionOfSelectorsList) => {
   //wait for the page to find the selector, retrieve arr of elements
   const matchingElementsArr = await page.$$(sectionOfSelectorsList.selector) //[HTML]
-  if (sectionOfSelectorsList.selector === 'section[id=experience-section] li.pv-profile-section') {
-      await console.log('\n\n\nmatchingElementsArr')
-      await console.log(matchingElementsArr)
-      await console.log('\n')
-      await console.log('length: ', matchingElementsArr.length)
-      await console.log('\n\n\n')
-  }
-  let scrapedPromises = [];
+  let results = [];
   //for every element build a new array containing the results of the queryEachField
   for (let index in matchingElementsArr) {
-    scrapedPromises[index] = await queryEachField(matchingElementsArr[index], sectionOfSelectorsList);
+    results[index] = await queryEachField(matchingElementsArr[index], sectionOfSelectorsList);
   }
 
   //return all the scraped data
-  return Promise.all(scrapedPromises)
+  return results;
 }
 
 module.exports = queryInSection;

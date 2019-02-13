@@ -1,6 +1,3 @@
-//    await queryInSection(page, selectors[positions]);
-
-
 //format:
     //first children : {nameOfWebpage: object}
         //second children : {nameOfPage: object}

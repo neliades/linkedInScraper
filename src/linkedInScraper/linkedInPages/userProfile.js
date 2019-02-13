@@ -55,12 +55,8 @@ module.exports = async (browser, url) => {
   
   //remove unnecessary parts of strings
   if (queryResults.profile) {
-      console.log('queryResults.profile[0]: ', queryResults.profile[0]);
-      console.log('queryResults.profile: ', queryResults.profile);
       queryResults.profile = queryResults.profile[0];
       replaceStringInProperty(queryResults.profile, 'connections', ' connections', '');
-      console.log('\n!!!!!!!!!!!!!!!!!!!!\n')
-      console.log(queryResults.positions)
       queryResults.positions.forEach((position) => {
         replaceStringInProperty(position, 'title', 'Company Name\n', '');
         replaceStringInProperty(position, 'description', 'See more', '');
