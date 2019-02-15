@@ -1,12 +1,13 @@
 //format:
     //first children : {nameOfWebpage: object}
         //second children : {nameOfPage: object}
-            //third children and beyond: string or object
+            //third children and beyond: string or object or null
                 //if string: selector
                 //if object:
                     //selector(s): performs querySelector(All)
                     //fields[optional] : see third children and beyond
                     //attributes[optional] : string (default = 'innertext')
+                //if null: no query performed, property will be saved as null
 let selectors = {
     linkedIn : {
         logIn : {
@@ -25,6 +26,11 @@ let selectors = {
                 positions_roles : '.pv-position-entity button.pv-profile-section__see-more-inline' ,
                 recommendations : '.pv-recommendation-entity__text a.lt-line-clamp__more'
             },
+            seeLess: {
+              skills: 'button.pv-skills-section__additional-skills[aria-expanded=true]',
+              positions : '.pv-profile-section__see-less-inline',
+              positions_roles : '.pv-position-entity button.pv-profile-section__see-less-inline',
+            },
             header: "h1[class~='pv-top-card-section__name']",
             footer: '#footer-logo',
             profile: {
@@ -42,6 +48,11 @@ let selectors = {
               fields: {
                 title: 'h3',
                 companyName: 'span.pv-entity__secondary-title',
+                linkedInUrl: {
+                  selector: 'a[data-control-name=background_details_company]',
+                  attribute: 'href'
+                },
+                companyUrl: null,
                 location: 'pv-entity__location span:nth-child(2)',
                 description: 'p[class~=pv-entity__description]',
                 date1: 'h4.pv-entity__date-range span:nth-child(2)',
@@ -50,9 +61,13 @@ let selectors = {
                   selector: '.pv-entity__role-details',
                   fields: {
                     title: 'h3 span:not(.visually-hidden)',
+                    companyName: null,
+                    linkedInUrl: null,
+                    companyUrl: null,
+                    location: 'pv-entity__location span:nth-child(2)',
+                    description: 'p[class~=pv-entity__description]',
                     date1: 'h4.pv-entity__date-range span:nth-child(2)',
-                    date2: '.pv-entity__bullet-item-v2',
-                    location: 'pv-entity__location span:nth-child(2)'
+                    date2: '.pv-entity__bullet-item-v2'
                   }
                 }
               }
@@ -131,8 +146,68 @@ let selectors = {
                 date2: '.pv-entity__bullet-item'
               }
             }
+          },
+          companyProfile : {
+            header: 'div[class=org-top-card__left-col]',
+            topCard: {
+              selector: 'div[class=org-top-card__left-col]',
+              fields: {
+                website: {
+                  selector: 'a[data-control-name=top_card_view_website_custom_cta_btn]',
+                  attribute: 'href'
+                }
+              }
+            }
+          },
+          userSearch : {
+            header: 'div.search-filters-bar',
+            footer: '#footer-logo',
+            numOfResultsBanner: {
+              selector: 'div.blended-srp-results-js',
+              fields: {
+                numOfResults: 'h3.search-results__total'
+              }
+            },
+            searchResult: {
+              selector: 'div.search-result__info',
+              fields: {
+                profileUrl: {
+                  selector: 'a[data-control-name=search_srp_result]',
+                  attribute: 'href'
+                }
+              }
+            },
+            pages: {
+              buttons: {
+                selector: 'ol.results-paginator',
+                fields: {
+                  button: 'button'
+                }
+              }
+
+            }
+          },
+          errorHandling: {
+            captcha: 'div.recaptcha-checkbox-checkmark',
+            defaultConfirmation: 'input[role=combobox]',
+            signIn1 : {
+              email : '#login-email',
+              password : '#login-password',
+              submit : '#login-submit'
+            },
+            signIn2: {
+              email: 'input#username',
+              password: 'input#password',
+              submit: 'button.btn__primary--large'
+            },
+            signIn3: {
+              email: 'input.login-email',
+              password: 'input.login-password',
+              submit: 'input.login.submit-button'
+            },
+
+
           }
-          
     }
 }
 

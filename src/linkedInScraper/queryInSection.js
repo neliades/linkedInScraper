@@ -1,5 +1,11 @@
 const queryFieldAndChildren = async (element, fieldKey, field, scrapedDataObject) => { 
-    
+  
+    //if selector is intentionally empty
+    if (field === null) {
+      scrapedDataObject[fieldKey] = null;
+      return scrapedDataObject;
+    }
+
     //if the field has a selector, use it, otherwise the field IS the selector
     const selector = field.selector ? field.selector : field;
     const selectors = field.selectors;
@@ -25,7 +31,7 @@ const queryFieldAndChildren = async (element, fieldKey, field, scrapedDataObject
     }
 
     //return the object
-    return scrapedDataObject
+    return scrapedDataObject;
 }
 
 
@@ -38,7 +44,7 @@ const queryEachField = async (elementWithChildren, sectionOfSelectorsList) => {
     await queryFieldAndChildren(elementWithChildren, fieldKey, field, storage);
   }
   
-  return storage
+  return storage;
 }
 
 
