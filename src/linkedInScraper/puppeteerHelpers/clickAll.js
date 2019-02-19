@@ -7,7 +7,7 @@ const clickAll = async(page, selectorsList) => {
         try {
             await element[i].click();
         } catch (error) {
-            console.log(`Could not find ${selector}`)
+            // console.log(`Could not find ${selector}`)
         }
       }
     }

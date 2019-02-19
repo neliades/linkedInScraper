@@ -4,18 +4,18 @@ const clickAll = require('../puppeteerHelpers/clickAll')
 const companyProfile = require('./companyProfile.js')
 const queryInSection = require('../queryInSection.js')
 
+const openPageWithLoginCircumvention = require('./pageHelpers/openPageWithLoginCircumvention');
+
+
 const {linkedIn} = require('../selectorsList.js');
 const selectors = linkedIn.userProfile;
+const feedSelector = linkedIn.errorHandling.feed;
 
 
-const userProfile = async (browser, url, max = 5, count = 0) => {
+
+const userProfile = async (browser, url, checkForLogin = false, max = 5, count = 0) => {
   try {
-    const page = await openNewPage(browser, url);
-    try {
-      await page.waitFor(selectors.header, { timeout: 1000 * 5 });
-    } catch(error) {
-      throw new Error('No profile found')
-    }
+    let page = await openPageWithLoginCircumvention(browser, url, checkForLogin, [selectors.header, feedSelector], 'profile')
 
     await scrollToBottom(page, selectors.footer)
 
@@ -23,7 +23,7 @@ const userProfile = async (browser, url, max = 5, count = 0) => {
     await clickAll(page, selectors.seeMore)
 
     for (let key in selectors.seeLess) {
-      try { await page.waitFor(selectors.seeLess[key], { timeout: 1000 * 0.5 }); } catch (error) {};
+      try { await page.waitFor(selectors.seeLess[key], { timeout: 1000 * 0.25 }); } catch (error) {};
     }
 
     let queryResults = {
@@ -113,9 +113,10 @@ const userProfile = async (browser, url, max = 5, count = 0) => {
     return queryResults;
   } catch (error) {
     count++;
+    console.log(error)
     console.log(`Error capturing user profile. Attempt ${count}/${max}`);
     if (count === 5) throw 'Terminating.'
-    return userProfile(browser, url, max, count);
+    return userProfile(browser, url, true, max, count);
   }
 
 }

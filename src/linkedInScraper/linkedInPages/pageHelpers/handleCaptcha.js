@@ -4,7 +4,7 @@ const selectors = linkedIn.errorHandling.captcha;
 const handleCaptcha = async (page) => {
     try {
         try {
-            await page.waitFor(selectors, { timeout: 500});
+            await page.waitFor(selectors, { timeout: 1000 * 0.5});
         } catch (error) {
         }
         let captchaButton = await page.$(selectors);

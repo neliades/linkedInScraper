@@ -1,18 +1,18 @@
 const openPage = require('../puppeteerHelpers/openNewPage')
 const queryInSection = require('../queryInSection.js')
 
+const openPageWithLoginCircumvention = require('./pageHelpers/openPageWithLoginCircumvention');
+
+
 const {linkedIn} = require('../selectorsList.js');
 const selectors = linkedIn.companyProfile;
+const feedSelector = linkedIn.errorHandling.feed;
 
-const companyProfile = async (browser, url, max = 5, count = 0) => {
+const companyProfile = async (browser, url, checkForLogin = false, max = 5, count = 0) => {
     try {
-        const page = await openPage(browser, url);
-        try {
-            await page.waitFor(selectors.header, { timeout: 5000 });
-        } catch(error) {
-            console.log(url)
-            throw new Error('No company found');
-        }
+
+        let page = await openPageWithLoginCircumvention(browser, url, checkForLogin, [selectors.header, feedSelector], 'company')
+
         
         let {website} = (await queryInSection(page, selectors.topCard))[0];
 
@@ -24,7 +24,7 @@ const companyProfile = async (browser, url, max = 5, count = 0) => {
         count++;
         console.log(`Error capturing company profile. Attempt ${count}/${max}`);
         if (count === 5) throw 'Terminating.'
-        return companyProfile(browser, url, max, count);
+        return companyProfile(browser, url, true, max, count);
       }
 }
 

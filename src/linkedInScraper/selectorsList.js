@@ -190,21 +190,24 @@ let selectors = {
           errorHandling: {
             captcha: 'div.recaptcha-checkbox-checkmark',
             defaultConfirmation: 'input[role=combobox]',
-            signIn1 : {
-              email : '#login-email',
-              password : '#login-password',
-              submit : '#login-submit'
-            },
-            signIn2: {
-              email: 'input#username',
-              password: 'input#password',
-              submit: 'button.btn__primary--large'
-            },
-            signIn3: {
-              email: 'input.login-email',
-              password: 'input.login-password',
-              submit: 'input.login.submit-button'
-            },
+            feed: 'a.js-nav-item-link.active li-icon[type="nav-small-home-icon"]',
+            signIn : {
+              signIn1 : {
+                email : '#login-email',
+                password : '#login-password',
+                submit : '#login-submit'
+              },
+              signIn2: {
+                email: 'input#username',
+                password: 'input#password',
+                submit: 'button.btn__primary--large'
+              },
+              signIn3: {
+                email: 'input.login-email',
+                password: 'input.login-password',
+                submit: 'input.login.submit-button'
+              }
+            }
 
 
           }

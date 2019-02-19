@@ -1,12 +1,12 @@
 const openNewPage = require('../puppeteerHelpers/openNewPage.js')
 const attemptLoginIfExists = require('./pageHelpers/attemptLoginIfExists');
 
-const logIn = async (browser, email, password) => {
+const logIn = async (browser) => {
   try {
     const url = 'https://www.linkedin.com'
     const page = await openNewPage(browser, url)
 
-    await attemptLoginIfExists(page, {email, password}, null, 1000 * 15)
+    return await attemptLoginIfExists(page, 1000 * 15, true);
 
         // throw (`
         // There was an error with login.  The site may have required a not-a-robot check.  Try again.

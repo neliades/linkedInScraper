@@ -2,8 +2,9 @@ const handleCaptcha = require('./handleCaptcha');
 const determineWhichLogin = require('./determineWhichLogin.js');
 const {linkedIn} = require('../../selectorsList.js');
 const defaultConfirmation = linkedIn.errorHandling.defaultConfirmation;
+const credentials = require('../../config.js');
 
-const attemptLoginIfExists = async (page, credentials, confirmationSelector, timeout = 1000 * 0.5, count = 0, max = 5) => {
+const attemptLoginIfExists = async (page, timeout = 1000 * 2, closePage = false, confirmationSelector, count = 0, max = 5) => {
   confirmationSelector = confirmationSelector || defaultConfirmation;
   try {
     
@@ -22,11 +23,24 @@ const attemptLoginIfExists = async (page, credentials, confirmationSelector, tim
     }
 
     try {
-      let pageAfterLoginExists = await page.waitForSelector(confirmationSelector, { timeout });
-      await page.close();
-      return (pageAfterLoginExists);
+      let pageAfterLoginExists;
+      let successfulSelector;
+      if (typeof confirmationSelector === 'string') { confirmationSelector = [confirmationSelector] }
+      for (let i in confirmationSelector) {
+        let selector  = confirmationSelector[i];
+        if (!pageAfterLoginExists) {
+          if (i > 0) timeout = 0.25 * 1000;
+          try { pageAfterLoginExists = await page.waitForSelector(confirmationSelector[i], { timeout }) } catch(error) {}; 
+        }
+        if (pageAfterLoginExists) {
+          successfulSelector = confirmationSelector[i];
+          break;
+        }
+      }
+      if (closePage) await page.close();
+      if (!pageAfterLoginExists) throw new Error();
+      return (successfulSelector);
     } catch (error) {
-      // await browser.close()
       if (!selectors) throw console.log(`No login was required, but the provided confirmation selector could not be found.`);
       throw console.log (`
       There was an error with login.  The provided confirmation selector could not be found.  The site may have required a not-a-robot check.  Try again.
@@ -46,7 +60,7 @@ const attemptLoginIfExists = async (page, credentials, confirmationSelector, tim
     Set isVisible to true for visual confirmation.
     If the problem persists further, the selectors used to find the login elements may be outdated.
     `)
-    return await attemptLoginIfExists(page, credentials, confirmationSelector, timeout, count, max);
+    return await attemptLoginIfExists(page, timeout, closePage, confirmationSelector, count, max);
   }
 }
 

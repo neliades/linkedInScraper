@@ -3,11 +3,16 @@ const scrollToBottom = require('../puppeteerHelpers/scrollToBottom.js')
 const clickAll = require('../puppeteerHelpers/clickAll')
 const userProfile = require('./userProfile.js')
 const queryInSection = require('../queryInSection.js')
+const attemptLoginIfExists = require('./pageHelpers/attemptLoginIfExists');
+const openPageWithLoginCircumvention = require('./pageHelpers/openPageWithLoginCircumvention');
 
 const timeLap = require('../timeKeeping/trackTime.js')
 
 const {linkedIn} = require('../selectorsList.js');
 const selectors = linkedIn.userSearch;
+const feedSelector = linkedIn.errorHandling.feed;
+
+const progress = require('../progressTracking/progressBars.js')
 
 //open page
 //scroll to bottom
@@ -15,16 +20,9 @@ const selectors = linkedIn.userSearch;
 //invoke userProfile on hrefs
 //return array containing results
 
-const userSearch = async (browser, url, max = 5, count = 0) => {
+const userSearch = async (browser, url, checkForLogin = false, max = 5, count = 0) => {
     try {
-        let page;
-        try { page = await openPage(browser, url); } catch (error) { throw console.log ('Could not open new page') }
-        try {
-            await page.waitFor(selectors.header, { timeout: 5000 });
-        } catch(error) {
-            throw console.log('No search page found at ', url)
-        }
-
+        let page = await openPageWithLoginCircumvention(browser, url, checkForLogin, [selectors.header, feedSelector], 'search')
         try { await scrollToBottom(page, selectors.footer) } catch (error) { throw console.log ('Could not scroll to bottom') }
 
         let profileUrls = []
@@ -41,16 +39,25 @@ const userSearch = async (browser, url, max = 5, count = 0) => {
         let results = [];
         try {
             for (let i in profileUrls) {
-                let time = timeLap('userSearch', profileUrls.length);
-                if (time.lapTime) console.log(`\nUser data collected in ${time.lapTime}`);
+                // let time = timeLap('userSearch', num);
+                
+                // if (time.lapTime) console.log(`\nUser data collected in ${time.lapTime}`);
+
                 // console.log(`\nGathering info on user profile ${time.currentCount}/${time.expectedCount}`);
-                if (time.expectedTime) console.log(`\n${time.currentCount}/${time.expectedCount} complete. Estimated time to completion: ${time.expectedTime}`);
+                // if (time.expectedTime) console.log(`\n${time.currentCount}/${time.expectedCount} complete. Estimated time to completion: ${time.expectedTime}`);
                 let {profileUrl} = profileUrls[i];
                 results.push(await userProfile(browser, profileUrl));
-                if(parseInt(i) === profileUrls.length - 1) console.log('\n', timeLap('userSearch', profileUrls.length, true));
+
+                // console.log('tick')
+                //send index and num to master
+                process.send({tick: true, num});
+
+                // if(parseInt(i) === profileUrls.length - 1) {
+                //     console.log(profileUrl)
+                //     console.log('\n', timeLap('userSearch', profileUrls.length, true))};
             }
         } catch (error) {
-            throw console.log ('Could not get user data')
+            throw console.log ('Could not get user data', error)
         }
         //if the page selector bar exists, take the cpuCount and add it to the current page
 
@@ -62,9 +69,10 @@ const userSearch = async (browser, url, max = 5, count = 0) => {
 
     } catch (error) {
         count++;
+        console.log(error)
         console.log(`Error capturing user profiles from search. Attempt ${count}/${max}`);
         if (count === 5) throw console.log ('Terminating.')
-        return userSearch(browser, url, max, count);
+        return userSearch(browser, url, true, max, count);
       }
 }
 
