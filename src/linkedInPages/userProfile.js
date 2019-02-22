@@ -75,6 +75,7 @@ const userProfile = async (browser, url, checkForLogin = false, max = 5, count =
         queryResults.profile = queryResults.profile[0];
         replaceStringInProperty(queryResults.profile, 'connections', ' connections', '');
         queryResults.positions.forEach((position) => {
+          // console.log(position)
           replaceStringInProperty(position, 'title', 'Company Name\n', '');
           replaceStringInProperty(position, 'description', 'See more', '');
           if(position.roles) {
@@ -108,9 +109,10 @@ const userProfile = async (browser, url, checkForLogin = false, max = 5, count =
       let validUrl = position.linkedInUrl.split('linkedin.com/school').length > 1 || position.linkedInUrl.split('linkedin.com/company').length > 1;
       if (validUrl && position.companyUrl === null) position.companyUrl = await companyProfile(browser, position.linkedInUrl);
       if (position.roles) {
+        replaceStringInProperty(position, 'position', 'Company Name\n', '');
         for(let j in position.roles) {
           let role = position.roles[j];
-          role.companyName = position.title;
+          role.name = position.position;
           role.linkedInUrl = position.linkedInUrl;
           role.companyUrl = position.companyUrl;
         }
@@ -119,7 +121,6 @@ const userProfile = async (browser, url, checkForLogin = false, max = 5, count =
     }
 
     queryResults.profile.url = url;
-
     addUserToDb(queryResults);
 
     await page.close()

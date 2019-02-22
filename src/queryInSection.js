@@ -49,7 +49,6 @@ const queryEachField = async (elementWithChildren, sectionOfSelectorsList) => {
 
 
 
-
 const queryInSection = async (page, sectionOfSelectorsList) => {
   //wait for the page to find the selector, retrieve arr of elements
   const matchingElementsArr = await page.$$(sectionOfSelectorsList.selector) //[HTML]

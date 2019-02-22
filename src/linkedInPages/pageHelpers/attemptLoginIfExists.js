@@ -4,7 +4,7 @@ const {linkedIn} = require('../../selectorsList.js');
 const defaultConfirmation = linkedIn.errorHandling.defaultConfirmation;
 const credentials = require('../../config.js');
 
-const attemptLoginIfExists = async (page, timeout = 1000 * 2, closePage = false, confirmationSelector, count = 0, max = 5) => {
+const attemptLoginIfExists = async (page, browser, url, timeout = 1000 * 2, closePage = false, confirmationSelector, count = 0, max = 5) => {
   confirmationSelector = confirmationSelector || defaultConfirmation;
   try {
     
@@ -60,7 +60,9 @@ const attemptLoginIfExists = async (page, timeout = 1000 * 2, closePage = false,
     Set isVisible to true for visual confirmation.
     If the problem persists further, the selectors used to find the login elements may be outdated.
     `)
-    return await attemptLoginIfExists(page, timeout, closePage, confirmationSelector, count, max);
+    await page.close()
+    page = await openNewPage(browser, url)
+    return await attemptLoginIfExists(page, browser, url, timeout, closePage, confirmationSelector, count, max);
   }
 }
 

@@ -6,7 +6,7 @@ const logIn = async (browser) => {
     const url = 'https://www.linkedin.com'
     const page = await openNewPage(browser, url)
 
-    return await attemptLoginIfExists(page, 1000 * 15, true);
+    return await attemptLoginIfExists(page, browser, url, 1000 * 15, true);
 
         // throw (`
         // There was an error with login.  The site may have required a not-a-robot check.  Try again.

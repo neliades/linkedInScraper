@@ -24,7 +24,7 @@ const openPageWithLoginCircumvention = async (browser, url, checkForLogin = fals
     if (checkForLogin) {
         console.log('\nsecure open\n')
         try {
-            let successfulSelector = await attemptLoginIfExists(page, 1000 * 2, false, confirmationSelectors);
+            let successfulSelector = await attemptLoginIfExists(page, browser, url, 1000 * 2, false, confirmationSelectors);
             if (!successfulSelector || successfulSelector === feedSelector) {
                 await page.close();
                 page = await openPage(browser, url);
