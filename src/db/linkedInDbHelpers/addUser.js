@@ -1,9 +1,9 @@
 // console.log('\n\n\n\n\n***new test***\n\n\n\n\n')
 
 
-const {insertQueryIfNotExists} = require('./helpers.js')
-const {findLastId} = require('./helpers.js')
-const {updateOneFieldDB} = require('./helpers.js')
+const {insertQueryIfNotExists} = require('../helpers.js')
+const {findLastId} = require('../helpers.js')
+const {updateOneFieldDB} = require('../helpers.js')
 
 
 // const connection = require('./connectToDb.js');
@@ -26,8 +26,8 @@ const addUserToDb = async function (userInfo, cb) {
         for (let i = 0; i < companiesArr.length; i++) {
             let position = companiesArr[i];
             queryInfo[`positionsFROMcompanies_${i}`] = {
-                fields : 'position, linkedInUrl, companyUrl, startToEnd, duration, description',
-                values : [ position.position, position.linkedInUrl, position.companyUrl, position.startToEnd, position.duration, position.description], 
+                fields : 'position, linkedInUrl, companyUrl, startToEnd, duration, description, location',
+                values : [ position.position, position.linkedInUrl, position.companyUrl, position.startToEnd, position.duration, position.description, position.location], 
                 targetTable : 'users_companiesFROMusers',
                 foreignFields : 'id_users, id_companiesFROMusers',
                 foreignIdList: ['users', `companiesFROMusers_${i}`],
@@ -118,7 +118,7 @@ const addUserToDb = async function (userInfo, cb) {
 
         let insertForeignAndWait = async (propertyName) => {
             // console.log('starting foreign and junctions: ', propertyName);
-            await new Promise (resolve => {
+            let insert = await new Promise (resolve => {
                 let values = [];
                 let foreignIdList = queryInfo[propertyName].foreignIdList;
                 // if (propertyName.split('companiesFROMusers').length > 1) console.log({foreignIdList, id: queryInfo[propertyName].id})
@@ -183,24 +183,29 @@ const addUserToDb = async function (userInfo, cb) {
             return new Promise (resolve => {
                 //find if exists
                 let tableName = propertyName.split('_')[0];
-                insertQueryIfNotExists(tableName, queryInfo[propertyName].fields, queryInfo[propertyName].values, (id) => {
-                    //if exists or if just added, save the id to the object
-                    if (queryInfo[propertyName].id === null) {
-                        if (id) {
-                            queryInfo[propertyName].id = id;
-                            resolve();
-                        } else {
-                            findLastId ( (lastId) => {
-                                queryInfo[propertyName].id = lastId;
+                try {
+                    insertQueryIfNotExists(tableName, queryInfo[propertyName].fields, queryInfo[propertyName].values, (id) => {
+                        //if exists or if just added, save the id to the object
+                        if (queryInfo[propertyName].id === null) {
+                            if (id) {
+                                queryInfo[propertyName].id = id;
                                 resolve();
-                            })
+                            } else {
+                                findLastId ( (lastId) => {
+                                    queryInfo[propertyName].id = lastId;
+                                    resolve();
+                                })
+                            }
                         }
-                    }
-                });
+                    });
+                } catch (error) {
+                    resolve('no connection');
+                }
             });
         }
         for (let propertyName in queryInfo) {
-            await insertAndWait(propertyName);
+            let insert = await insertAndWait(propertyName);
+            if (insert === 'no connection') return;
         }
         for (let propertyName in queryInfo) {
             await insertForeignAndWait(propertyName);

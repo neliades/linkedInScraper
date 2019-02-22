@@ -104,6 +104,8 @@ const queryWithInnerJoin = (desiredTablesAndFieldsObj, innerJoinsArr, whereObj, 
     //     value: '1'
     // }
     updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
     
     let select = '';
     for (let key in desiredTablesAndFieldsObj) {
@@ -160,6 +162,8 @@ const queryWithInnerJoin = (desiredTablesAndFieldsObj, innerJoinsArr, whereObj, 
 
 const checkIfExists = (companyInfo, tableName, field, value, cbExists, cbNotExists) => {
     updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
     let sql = `SELECT * FROM ${tableName} WHERE ${field} = (?)`
     connection.query(sql, [[value]], (err, results) => {
         if(err) {
@@ -192,6 +196,8 @@ const checkIfExists = (companyInfo, tableName, field, value, cbExists, cbNotExis
 
 const insertQuery = (tableName, fields, values, cb) => {
     updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
     let sql = `INSERT INTO ${tableName} (${fields})
     VALUES (?)`;
     // console.log()
@@ -211,6 +217,8 @@ const insertQuery = (tableName, fields, values, cb) => {
 
 const checkIfExistsInJunction = (tableName, fields, values, cbExists, cbNotExists) => {
     updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
     // console.log('checking junction for first two fields')
     let sql = `SELECT * FROM ${tableName} WHERE ${fields[0]} = ? AND ${fields[1]} = ?`;
     connection.query(sql, [values[0], values[1]], (err, results) => {
@@ -239,6 +247,8 @@ const checkIfExistsInJunction = (tableName, fields, values, cbExists, cbNotExist
 
 const insertQueryIfNotExists = (tableName, fields, values, cb) => {
     updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
     let field = fields.split(',')[0];
     let value;
     typeof values === "object" ? value = values[0] : value = values; 
@@ -264,6 +274,8 @@ const insertQueryIfNotExists = (tableName, fields, values, cb) => {
 
 const updateOneFieldDB = (tableName, fieldLookup, valueLookup, field, value, cb) => {
     updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
     let sql = `UPDATE ${tableName}
     SET ${field} = ?
     WHERE ${fieldLookup} = ?`;
@@ -281,6 +293,8 @@ const updateOneFieldDB = (tableName, fieldLookup, valueLookup, field, value, cb)
 
 const findLastId = (cb) => {
     updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
     let sql = `SELECT LAST_INSERT_ID()`;
     connection.query(sql, null, (err, results) => {
         if(err) {

@@ -6,8 +6,6 @@ const queryInSection = require('../queryInSection.js')
 const attemptLoginIfExists = require('./pageHelpers/attemptLoginIfExists');
 const openPageWithLoginCircumvention = require('./pageHelpers/openPageWithLoginCircumvention');
 
-const addToDb = require('../db/handleData.js')
-
 const timeLap = require('../timeKeeping/trackTime.js')
 
 const {linkedIn} = require('../selectorsList.js');
@@ -50,10 +48,6 @@ const userSearch = async (browser, url, checkForLogin = false, max = 5, count = 
                 let {profileUrl} = profileUrls[i];
                 let profile = await userProfile(browser, profileUrl);
                 results.push(profile);
-
-                //add profile to database
-
-                // addToDb(profile);
 
                 // console.log('tick')
                 //send index and num to master

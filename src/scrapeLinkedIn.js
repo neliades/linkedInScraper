@@ -7,9 +7,7 @@ const userProfile = require('./linkedInPages/userProfile.js')
 const companyProfile = require('./linkedInPages/companyProfile.js')
 const userSearch = require('./linkedInPages/userSearch.js')
 const config = require('./config.js');
-const {connection} = require('./db/connectToDb.js');
 
-let {addUserToDb} = require('./db/addUser.js')
 
 // const mysql = require('./db/connectToDb.js');
 
@@ -84,8 +82,6 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
                                     progress.tick();
                                 } else if (msg.log && msg.msg) {
                                     progress.log(msg.msg)
-                                // } else if (msg.profile) {
-                                //     addUserToDb(msg.profile);
                                 } else {
                                     let profiles = msg.completedProfiles.profiles;
                                     if (msg.num && !numOfPagesToBeVisited) {

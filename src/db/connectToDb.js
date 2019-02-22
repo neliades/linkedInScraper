@@ -8,6 +8,10 @@ let connection = {};
 console.log('connect to db is read')
 const buildSchemaAndConnect = async () => {
     if (connection.connection) return;
+    if (typeof mysqlConfig.host !== 'string' || typeof mysqlConfig.user !== 'string' || typeof mysqlConfig.password !== 'string' || typeof mysqlConfig.database !== 'string') {
+        connection.connection = 'none';
+        return;
+    }
     console.log('buildSchema invoked')
     await new Promise ((resolve) => {
         exec(`mysql -u root < ~/../..${__dirname}/schema.sql`, (error) => {

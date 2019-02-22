@@ -57,9 +57,7 @@ let selectors = {
                 startToEnd: 'h4.pv-entity__date-range span:nth-child(2)',
                 duration: '.pv-entity__bullet-item-v2',
                 description: 'p[class~=pv-entity__description]',
-                //========
-                location: 'pv-entity__location span:nth-child(2)',
-                //========
+                location: 'h4.pv-entity__location span:nth-child(2)',
                 roles: {
                   selector: '.pv-entity__role-details',
                   fields: {
@@ -70,7 +68,7 @@ let selectors = {
                     startToEnd: 'h4.pv-entity__date-range span:nth-child(2)',
                     duration: '.pv-entity__bullet-item-v2',
                     description: 'p[class~=pv-entity__description]',
-                    location: 'pv-entity__location span:nth-child(2)'
+                    location: 'h4.pv-entity__location span:nth-child(2)'
                   }
                 }
               }
@@ -146,7 +144,7 @@ let selectors = {
                 description: '.pv-volunteer-causes',
                 startToEnd: 'h4.pv-entity__date-range span:nth-child(2)',
                 duration: '.pv-entity__bullet-item',
-                location: 'pv-entity__location span:nth-child(2)'
+                location: 'h4.pv-entity__location span:nth-child(2)'
               }
             }
           },
