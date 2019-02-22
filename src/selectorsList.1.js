@@ -88,58 +88,58 @@ let selectors = {
                 count: 'span.pv-skill-category-entity__endorsement-count'
               }
             },
-            recommendationsCount: {
-              selector: '.recommendations-inlining',
-              fields: {
-                received: 'artdeco-tab:nth-child(1)',
-                given: 'artdeco-tab:nth-child(2)'
-              }
-            },
-            recommendationsReceived: {
-              selector: 'artdeco-tabpanel[aria-hidden=false] li.pv-recommendation-entity',
-              fields: {
-                user: {
-                  selector: 'a.pv-recommendation-entity__member',
-                  attribute: 'href'
-                },
-                text: 'blockquote.pv-recommendation-entity__text'
-              }
-            },
-            recommendationsGiven: {
-              selector: 'artdeco-tabpanel[aria-hidden=true] li.pv-recommendation-entity',
-              fields: {
-                user: {
-                  selector: 'a.pv-recommendation-entity__member',
-                  attribute: 'href'
-                },
-                text: 'blockquote.pv-recommendation-entity__text'
-              }
-            },
-            accomplishments: {
-              selector: 'section.pv-accomplishments-section div.ember-view',
-              fields: {
-                count: 'h3.pv-accomplishments-block__count span:nth-child(2)',
-                title: '.accomplishments-block__content h3.pv-accomplishments-block__title',
-                items: {
-                  selectors: 'li'
-                }
-              }
-            },
-            peopleAlsoViewed: {
-              selector: 'li.pv-browsemap-section__member-container',
-              fields: {
-                user: {
-                  selector: 'a',
-                  attribute: 'href'
-                },
-                text: 'p'
-              }
-            },
+            // recommendationsCount: {
+            //   selector: '.recommendations-inlining',
+            //   fields: {
+            //     received: 'artdeco-tab:nth-child(1)',
+            //     given: 'artdeco-tab:nth-child(2)'
+            //   }
+            // },
+            // recommendationsReceived: {
+            //   selector: 'artdeco-tabpanel[aria-hidden=false] li.pv-recommendation-entity',
+            //   fields: {
+            //     user: {
+            //       selector: 'a.pv-recommendation-entity__member',
+            //       attribute: 'href'
+            //     },
+            //     text: 'blockquote.pv-recommendation-entity__text'
+            //   }
+            // },
+            // recommendationsGiven: {
+            //   selector: 'artdeco-tabpanel[aria-hidden=true] li.pv-recommendation-entity',
+            //   fields: {
+            //     user: {
+            //       selector: 'a.pv-recommendation-entity__member',
+            //       attribute: 'href'
+            //     },
+            //     text: 'blockquote.pv-recommendation-entity__text'
+            //   }
+            // },
+            // accomplishments: {
+            //   selector: 'section.pv-accomplishments-section div.ember-view',
+            //   fields: {
+            //     count: 'h3.pv-accomplishments-block__count span:nth-child(2)',
+            //     title: '.accomplishments-block__content h3.pv-accomplishments-block__title',
+            //     items: {
+            //       selectors: 'li'
+            //     }
+            //   }
+            // },
+            // peopleAlsoViewed: {
+            //   selector: 'li.pv-browsemap-section__member-container',
+            //   fields: {
+            //     user: {
+            //       selector: 'a',
+            //       attribute: 'href'
+            //     },
+            //     text: 'p'
+            //   }
+            // },
             volunteerExperience: {
               selector: 'section.volunteering-section li',
               fields: {
                 title: 'h3',
-                experience: 'span[class=pv-entity__secondary-title]',
+                name: 'span[class=pv-entity__secondary-title]',
                 location: 'pv-entity__location span:nth-child(2)',
                 description: '.pv-volunteer-causes',
                 date1: 'h4.pv-entity__date-range span:nth-child(2)',

@@ -7,11 +7,17 @@ const userProfile = require('./linkedInPages/userProfile.js')
 const companyProfile = require('./linkedInPages/companyProfile.js')
 const userSearch = require('./linkedInPages/userSearch.js')
 const config = require('./config.js');
+const {connection} = require('./db/connectToDb.js');
+
+let {addUserToDb} = require('./db/addUser.js')
+
+// const mysql = require('./db/connectToDb.js');
 
 let progress = require('./progressTracking/progressBars.js');
 
 //returns a promise that resolves to a completed profile object
 const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false, browser, startPage = 1, permitted = cluster.isMaster) => {
+    if (cluster.isWorker) require('./db/connectToDb.js');
     numOfCpus = numOfCpus || cpuCount;
     if (email) config.email = email;
     if (password) config.password = password;
@@ -78,6 +84,8 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
                                     progress.tick();
                                 } else if (msg.log && msg.msg) {
                                     progress.log(msg.msg)
+                                // } else if (msg.profile) {
+                                //     addUserToDb(msg.profile);
                                 } else {
                                     let profiles = msg.completedProfiles.profiles;
                                     if (msg.num && !numOfPagesToBeVisited) {
@@ -111,7 +119,7 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
             return reject(error)
         }
         if (browser) await browser.close();
-
+        if(cluster.isWorker) process.exit();
         return resolve(completedProfiles);
 
 

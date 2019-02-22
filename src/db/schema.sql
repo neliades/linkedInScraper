@@ -1,3 +1,4 @@
+-- DROP DATABASE IF EXISTS LinkedInScraper;
 CREATE DATABASE IF NOT EXISTS LinkedInScraper;
 USE LinkedInScraper;
 
@@ -16,9 +17,9 @@ ALTER DATABASE LinkedInScraper CHARACTER SET utf8 COLLATE utf8_general_ci;
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `users`;
+-- DROP TABLE IF EXISTS `users`;
 		
-CREATE TABLE `users` (
+CREATE TABLE IF NOT EXISTS `users` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `url` VARCHAR(250) NULL DEFAULT NULL,
@@ -34,9 +35,9 @@ CREATE TABLE `users` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companies`;
+-- DROP TABLE IF EXISTS `companies`;
 		
-CREATE TABLE `companies` (
+CREATE TABLE IF NOT EXISTS `companies` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `website` VARCHAR(250) NULL DEFAULT NULL,
@@ -59,9 +60,9 @@ CREATE TABLE `companies` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companies_competitors`;
+-- DROP TABLE IF EXISTS `companies_competitors`;
 		
-CREATE TABLE `companies_competitors` (
+CREATE TABLE IF NOT EXISTS `companies_competitors` (
   `id_companies` INTEGER NULL DEFAULT NULL,
   `id_competitors` INTEGER NULL DEFAULT NULL
 );
@@ -71,9 +72,9 @@ CREATE TABLE `companies_competitors` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companies_alsoViewed`;
+-- DROP TABLE IF EXISTS `companies_alsoViewed`;
 		
-CREATE TABLE `companies_alsoViewed` (
+CREATE TABLE IF NOT EXISTS `companies_alsoViewed` (
   `id_companies` INTEGER NULL DEFAULT NULL,
   `id_alsoViewed` INTEGER NULL DEFAULT NULL
 );
@@ -83,9 +84,9 @@ CREATE TABLE `companies_alsoViewed` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `alsoViewed`;
+-- DROP TABLE IF EXISTS `alsoViewed`;
 		
-CREATE TABLE `alsoViewed` (
+CREATE TABLE IF NOT EXISTS `alsoViewed` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `id_companies` INTEGER NULL DEFAULT NULL,
@@ -97,9 +98,9 @@ CREATE TABLE `alsoViewed` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `competitors`;
+-- DROP TABLE IF EXISTS `competitors`;
 		
-CREATE TABLE `competitors` (
+CREATE TABLE IF NOT EXISTS `competitors` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `id_companies` INTEGER NULL DEFAULT NULL,
@@ -111,11 +112,14 @@ CREATE TABLE `competitors` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `positionsFROMcompanies`;
+-- DROP TABLE IF EXISTS `positionsFROMcompanies`;
 		
-CREATE TABLE `positionsFROMcompanies` (
+CREATE TABLE IF NOT EXISTS `positionsFROMcompanies` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `id_companiesFROMusers` INTEGER NULL DEFAULT NULL,
   `position` VARCHAR(250) NULL DEFAULT NULL,
+  `linkedInUrl` VARCHAR(250) NULL DEFAULT NULL,
+  `companyUrl` VARCHAR(250) NULL DEFAULT NULL,
   `startToEnd` VARCHAR(250) NULL DEFAULT NULL,
   `duration` VARCHAR(250) NULL DEFAULT NULL,
   `description` VARCHAR(1000) NULL DEFAULT NULL,
@@ -127,9 +131,9 @@ CREATE TABLE `positionsFROMcompanies` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `schools`;
+-- DROP TABLE IF EXISTS `schools`;
 		
-CREATE TABLE `schools` (
+CREATE TABLE IF NOT EXISTS `schools` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -140,10 +144,11 @@ CREATE TABLE `schools` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `degrees`;
+-- DROP TABLE IF EXISTS `degrees`;
 		
-CREATE TABLE `degrees` (
+CREATE TABLE IF NOT EXISTS `degrees` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `id_schools` INTEGER NULL DEFAULT NULL,
   `degree` VARCHAR(250) NULL DEFAULT NULL,
   `start` YEAR NULL DEFAULT NULL,
   `end` YEAR NULL DEFAULT NULL,
@@ -155,9 +160,9 @@ CREATE TABLE `degrees` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `organizations`;
+-- DROP TABLE IF EXISTS `organizations`;
 		
-CREATE TABLE `organizations` (
+CREATE TABLE IF NOT EXISTS `organizations` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -168,12 +173,12 @@ CREATE TABLE `organizations` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `positionsFROMorganizations`;
+-- DROP TABLE IF EXISTS `positionsFROMorganizations`;
 		
-CREATE TABLE `positionsFROMorganizations` (
+CREATE TABLE IF NOT EXISTS `positionsFROMorganizations` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
+  `id_organizations` INTEGER NULL DEFAULT NULL,
   `position` VARCHAR(250) NULL DEFAULT NULL,
-  `experience` VARCHAR(250) NULL DEFAULT NULL,
   `description` VARCHAR(1000) NULL DEFAULT NULL,
   `startToEnd` VARCHAR(250) NULL DEFAULT NULL,
   `duration` VARCHAR(250) NULL DEFAULT NULL,
@@ -185,9 +190,9 @@ CREATE TABLE `positionsFROMorganizations` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `skills`;
+-- DROP TABLE IF EXISTS `skills`;
 		
-CREATE TABLE `skills` (
+CREATE TABLE IF NOT EXISTS `skills` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `endorsements` INTEGER NULL DEFAULT NULL,
@@ -199,9 +204,9 @@ CREATE TABLE `skills` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `users_skills`;
+-- DROP TABLE IF EXISTS `users_skills`;
 		
-CREATE TABLE `users_skills` (
+CREATE TABLE IF NOT EXISTS `users_skills` (
   `id_users` INTEGER NULL DEFAULT NULL,
   `id_skills` INTEGER NULL DEFAULT NULL
 );
@@ -211,9 +216,9 @@ CREATE TABLE `users_skills` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `accomplishments`;
+-- DROP TABLE IF EXISTS `accomplishments`;
 		
-CREATE TABLE `accomplishments` (
+CREATE TABLE IF NOT EXISTS `accomplishments` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -224,9 +229,9 @@ CREATE TABLE `accomplishments` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `users_accomplishments`;
+-- DROP TABLE IF EXISTS `users_accomplishments`;
 		
-CREATE TABLE `users_accomplishments` (
+CREATE TABLE IF NOT EXISTS `users_accomplishments` (
   `id_users` INTEGER NULL DEFAULT NULL,
   `id_accomplishments` INTEGER NULL DEFAULT NULL
 );
@@ -236,12 +241,11 @@ CREATE TABLE `users_accomplishments` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `users_organizations`;
+-- DROP TABLE IF EXISTS `users_organizations`;
 		
-CREATE TABLE `users_organizations` (
+CREATE TABLE IF NOT EXISTS `users_organizations` (
   `id_users` INTEGER NULL DEFAULT NULL,
-  `id_organizations` INTEGER NULL DEFAULT NULL,
-  `id_positionsFROMorganizations` INTEGER NULL DEFAULT NULL
+  `id_organizations` INTEGER NULL DEFAULT NULL
 );
 
 -- ---
@@ -249,12 +253,11 @@ CREATE TABLE `users_organizations` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `users_schools`;
+-- DROP TABLE IF EXISTS `users_schools`;
 		
-CREATE TABLE `users_schools` (
+CREATE TABLE IF NOT EXISTS `users_schools` (
   `id_users` INTEGER NULL DEFAULT NULL,
-  `id_schools` INTEGER NULL DEFAULT NULL,
-  `id_degrees` INTEGER NULL DEFAULT NULL
+  `id_schools` INTEGER NULL DEFAULT NULL
 );
 
 -- ---
@@ -262,12 +265,11 @@ CREATE TABLE `users_schools` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `users_companiesFROMusers`;
+-- DROP TABLE IF EXISTS `users_companiesFROMusers`;
 		
-CREATE TABLE `users_companiesFROMusers` (
+CREATE TABLE IF NOT EXISTS `users_companiesFROMusers` (
   `id_users` INTEGER NULL DEFAULT NULL,
-  `id_companiesFROMusers` INTEGER NULL DEFAULT NULL,
-  `id_positionsFROMcompanies` INTEGER NULL DEFAULT NULL
+  `id_companiesFROMusers` INTEGER NULL DEFAULT NULL
 );
 
 -- ---
@@ -275,9 +277,9 @@ CREATE TABLE `users_companiesFROMusers` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companiesFROMusers`;
+-- DROP TABLE IF EXISTS `companiesFROMusers`;
 		
-CREATE TABLE `companiesFROMusers` (
+CREATE TABLE IF NOT EXISTS `companiesFROMusers` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   `id_companies` INTEGER NULL DEFAULT NULL,
@@ -290,9 +292,9 @@ CREATE TABLE `companiesFROMusers` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `industries`;
+-- DROP TABLE IF EXISTS `industries`;
 		
-CREATE TABLE `industries` (
+CREATE TABLE IF NOT EXISTS `industries` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -303,9 +305,9 @@ CREATE TABLE `industries` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `awards`;
+-- DROP TABLE IF EXISTS `awards`;
 		
-CREATE TABLE `awards` (
+CREATE TABLE IF NOT EXISTS `awards` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -316,9 +318,9 @@ CREATE TABLE `awards` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `processes`;
+-- DROP TABLE IF EXISTS `processes`;
 		
-CREATE TABLE `processes` (
+CREATE TABLE IF NOT EXISTS `processes` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -329,9 +331,9 @@ CREATE TABLE `processes` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companies_awards`;
+-- DROP TABLE IF EXISTS `companies_awards`;
 		
-CREATE TABLE `companies_awards` (
+CREATE TABLE IF NOT EXISTS `companies_awards` (
   `id_companies` INTEGER NULL DEFAULT NULL,
   `id_awards` INTEGER NULL DEFAULT NULL
 );
@@ -341,9 +343,9 @@ CREATE TABLE `companies_awards` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companies_processes`;
+-- DROP TABLE IF EXISTS `companies_processes`;
 		
-CREATE TABLE `companies_processes` (
+CREATE TABLE IF NOT EXISTS `companies_processes` (
   `id_companies` INTEGER NULL DEFAULT NULL,
   `id_processes` INTEGER NULL DEFAULT NULL,
   `percent` INTEGER NULL DEFAULT NULL
@@ -354,9 +356,9 @@ CREATE TABLE `companies_processes` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companyPositions`;
+-- DROP TABLE IF EXISTS `companyPositions`;
 		
-CREATE TABLE `companyPositions` (
+CREATE TABLE IF NOT EXISTS `companyPositions` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -367,9 +369,9 @@ CREATE TABLE `companyPositions` (
 -- 
 -- ---
 
-DROP TABLE IF EXISTS `companies_companyPositions`;
+-- DROP TABLE IF EXISTS `companies_companyPositions`;
 		
-CREATE TABLE `companies_companyPositions` (
+CREATE TABLE IF NOT EXISTS `companies_companyPositions` (
   `id_companies` INTEGER NULL DEFAULT NULL,
   `id_companyPositions` INTEGER NULL DEFAULT NULL,
   `low` INTEGER NULL DEFAULT NULL,
@@ -388,13 +390,13 @@ ALTER TABLE `users_accomplishments` ADD FOREIGN KEY (id_users) REFERENCES `users
 ALTER TABLE `users_accomplishments` ADD FOREIGN KEY (id_accomplishments) REFERENCES `accomplishments` (`id`);
 ALTER TABLE `users_organizations` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
 ALTER TABLE `users_organizations` ADD FOREIGN KEY (id_organizations) REFERENCES `organizations` (`id`);
-ALTER TABLE `users_organizations` ADD FOREIGN KEY (id_positionsFROMorganizations) REFERENCES `positionsFROMorganizations` (`id`);
+ALTER TABLE `positionsFROMorganizations` ADD FOREIGN KEY (id_organizations) REFERENCES `organizations` (`id`);
 ALTER TABLE `users_schools` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
 ALTER TABLE `users_schools` ADD FOREIGN KEY (id_schools) REFERENCES `schools` (`id`);
-ALTER TABLE `users_schools` ADD FOREIGN KEY (id_degrees) REFERENCES `degrees` (`id`);
+ALTER TABLE `degrees` ADD FOREIGN KEY (id_schools) REFERENCES `schools` (`id`);
 ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
 ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_companiesFROMusers) REFERENCES `companiesFROMusers` (`id`);
-ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_positionsFROMcompanies) REFERENCES `positionsFROMcompanies` (`id`);
+ALTER TABLE `positionsFROMcompanies` ADD FOREIGN KEY (id_companiesFROMusers) REFERENCES `companiesFROMusers` (`id`);
 ALTER TABLE `companiesFROMusers` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_awards` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_awards` ADD FOREIGN KEY (id_awards) REFERENCES `awards` (`id`);
