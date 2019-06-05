@@ -210,7 +210,30 @@ const insertQuery = (tableName, fields, values, cb) => {
           } else {
             // console.log(results);
             // console.log('completed: ', tableName)
-            if (cb) cb();
+            if (cb) cb(results);
+          }
+    })
+}
+
+const deleteQuery = (tableName, fields, values, cb) => {
+    updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
+    fields = fields.split(',');
+    if (values[0]) values[0] = values[0].replace("'", "''");
+    let sql = `DELETE FROM ${tableName} WHERE ${fields[0]} = '${values[0]}'`;
+
+    for (let i = 1; i < fields.length; i++) {
+        if (values[i]) values[i] = values[i].replace("'", "''"); 
+        sql = sql + ` OR ${fields[i]} = '${values[i]}'`;
+    }
+
+    connection.query(sql, null, (err, results) => {
+        if(err) {
+            console.log(err)
+            throw new Error("Error in deleteQuery", err)
+          } else {
+            if (cb) cb(results);
           }
     })
 }
@@ -246,6 +269,7 @@ const checkIfExistsInJunction = (tableName, fields, values, cbExists, cbNotExist
 }
 
 const insertQueryIfNotExists = (tableName, fields, values, cb) => {
+    // console.log('insertQueryIfNotExists: ', {tableName, fields, values})
     updateConnection();
     if (connection === 'none') throw new Error ('No mysql connection');
 
@@ -256,6 +280,7 @@ const insertQueryIfNotExists = (tableName, fields, values, cb) => {
     // console.log(tableName, ': ', value)
     checkIfExists(null, tableName, field, value, (companyInfo, results) => {
         let id = results[0].id;
+        console.log('results[0].id: ', results[0].id, 'results[0].id.insertId: ', results[0].id.insertId);
         if (tableName.split('_').length > 1) {
             fieldsArr = fields.split(',');
             // console.log('already exists but it is a junction, so checking if both ids exist')
@@ -273,20 +298,21 @@ const insertQueryIfNotExists = (tableName, fields, values, cb) => {
 }
 
 const updateOneFieldDB = (tableName, fieldLookup, valueLookup, field, value, cb) => {
+    // console.log('updateOneFieldDB: ', {tableName, fieldLookup, valueLookup, field, value})
     updateConnection();
     if (connection === 'none') throw new Error ('No mysql connection');
 
     let sql = `UPDATE ${tableName}
-    SET ${field} = ?
-    WHERE ${fieldLookup} = ?`;
+    SET ${field} = ${value}
+    WHERE ${fieldLookup} = ${valueLookup}`;
 
-    connection.query(sql, [value, valueLookup], (err, results) => {
+    connection.query(sql, null, (err, results) => {
         if(err) {
             console.log(err)
             throw new Error("Error in updateOneFieldDB", err)
           } else {
             // console.log(results);
-            if (cb) cb();
+            if (cb) cb(results);
         }
     })
 }
@@ -302,10 +328,36 @@ const findLastId = (cb) => {
             throw new Error("Error in selectLastTable", err)
         } else {
             let lastID = results[0]['LAST_INSERT_ID()'];
+            // console.log({results, lastID});
             cb(lastID);
           }
     })
 }
+
+
+const getCompanies = (cb) => {
+    updateConnection();
+    if (connection === 'none') throw new Error ('No mysql connection');
+
+    let sql = `SELECT * FROM companiesFROMusers`;
+    connection.query(sql, null, (err, results) => {
+        if(err) {
+            console.log(err)
+            throw new Error("Error in getCompanies", err)
+          } else {
+            console.log(results);
+            if (cb) cb();
+          }
+    })
+}
+
+module.exports.getCompanies = getCompanies
+
+
+
+
+
+
 
 module.exports.checkIfExists = checkIfExists;
 module.exports.insertQuery = insertQuery;
@@ -314,3 +366,4 @@ module.exports.insertQueryIfNotExists = insertQueryIfNotExists;
 module.exports.updateOneFieldDB = updateOneFieldDB;
 module.exports.findLastId = findLastId;
 module.exports.queryWithInnerJoin = queryWithInnerJoin;
+module.exports.deleteQuery = deleteQuery;

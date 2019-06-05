@@ -18,7 +18,7 @@ const feedSelector = linkedIn.errorHandling.feed;
 let {addUserToDb} = require('../db/linkedInDbHelpers/addUser.js')
 const findUser = require('../db/linkedInDbHelpers/findUser.js');
 
-const userProfile = async (browser, url, checkForLogin = false, max = 5, count = 0) => {
+const userProfile = async (browser, url, checkForLogin = false, max = 5, count = 0, distance) => {
   
   let savedUserData = await findUser(url);
   if (savedUserData) return savedUserData;  
@@ -121,8 +121,10 @@ const userProfile = async (browser, url, checkForLogin = false, max = 5, count =
     }
 
     queryResults.profile.url = url;
-    addUserToDb(queryResults);
+    queryResults.profile.distance = distance;
 
+    addUserToDb(queryResults);
+    
     await page.close()
     return queryResults;
   } catch (error) {

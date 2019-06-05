@@ -19,7 +19,7 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
     numOfCpus = numOfCpus || cpuCount;
     if (email) config.email = email;
     if (password) config.password = password;
-
+    if (permitted) console.log('permitted!')
         if (permitted) return new Promise(async (resolve, reject) => {
             let totalResults;
             let numOfPagesToBeVisited;
@@ -28,8 +28,8 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
         let completedProfiles = { profiles : [] };
         try {
 
-            let isProfileUrl = url.split('www.linkedin.com/in').length > 1;
-            let isSearchUrl = url.split('www.linkedin.com/search/results/people').length > 1;
+            let isProfileUrl = url.split('linkedin.com/in').length > 1;
+            let isSearchUrl = url.split('linkedin.com/search/results/people').length > 1;
             if (isSearchUrl) {
                 if (cluster.isWorker) {
                     // console.log(`\n\nI'm a worker\n\n`);
@@ -38,6 +38,7 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
                     currentPage = parseInt(urlParts[1]) || 0;
 
                     if (currentPage < startPage + numOfCpus) {
+                        console.log('launching for search')
                         browser = await puppeteer.launch({headless: !isVisible})
                         await logIn(browser, email, password);
                         progress.log('logged in and starting on results page: ', currentPage);
@@ -103,6 +104,7 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
                     });
                 }
             } else if (isProfileUrl) {
+                console.log('launching for Profile')
                 browser = await puppeteer.launch({headless: !isVisible})
                 await logIn(browser, email, password);
                 completedProfiles.profiles.push(await userProfile(browser, url));
@@ -121,6 +123,7 @@ const scrapeLinkedIn = async (email, password, url, numOfCpus, isVisible = false
 
         
     })
+    else console.log('not permitted')
 }
 
 

@@ -16,8 +16,8 @@ const addUserToDb = async function (userInfo, cb) {
     if (userInfo) {
         queryInfo = {
             users : {
-                fields : 'name, url, headline, location, summary, connections',
-                values : [userInfo.profile.name, userInfo.profile.url, userInfo.profile.headline, userInfo.profile.location, userInfo.profile.summary, userInfo.profile.connections.split('+')[0]],
+                fields : 'name, distance, url, headline, location, summary, connections',
+                values : [userInfo.profile.name, userInfo.profile.distance, userInfo.profile.url, userInfo.profile.headline, userInfo.profile.location, userInfo.profile.summary, userInfo.profile.connections.split('+')[0]],
                 id : null
             }
         }
@@ -26,8 +26,8 @@ const addUserToDb = async function (userInfo, cb) {
         for (let i = 0; i < companiesArr.length; i++) {
             let position = companiesArr[i];
             queryInfo[`positionsFROMcompanies_${i}`] = {
-                fields : 'position, linkedInUrl, companyUrl, startToEnd, duration, description, location',
-                values : [ position.position, position.linkedInUrl, position.companyUrl, position.startToEnd, position.duration, position.description, position.location], 
+                fields : 'position, startToEnd, duration, description, location',
+                values : [ position.position, position.startToEnd, position.duration, position.description, position.location], 
                 targetTable : 'users_companiesFROMusers',
                 foreignFields : 'id_users, id_companiesFROMusers',
                 foreignIdList: ['users', `companiesFROMusers_${i}`],
@@ -36,8 +36,8 @@ const addUserToDb = async function (userInfo, cb) {
                 id : null
             }
             queryInfo[`companiesFROMusers_${i}`] = {
-                fields : 'name',
-                values : [position.name], 
+                fields : 'name, linkedInUrl, companyUrl',
+                values : [position.name, position.linkedInUrl, position.companyUrl], 
                 targetTable : 'positionsFROMcompanies',
                 foreignFields : 'id_companiesFROMusers',
                 foreignIdList: ['self'],

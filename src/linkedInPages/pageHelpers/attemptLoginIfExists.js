@@ -4,13 +4,23 @@ const {linkedIn} = require('../../selectorsList.js');
 const defaultConfirmation = linkedIn.errorHandling.defaultConfirmation;
 const credentials = require('../../config.js');
 
+const openNewPage = require('../../puppeteerHelpers/openNewPage.js');
+
 const attemptLoginIfExists = async (page, browser, url, timeout = 1000 * 2, closePage = false, confirmationSelector, count = 0, max = 5) => {
+  console.log('attempting Login if exists invoked')
   confirmationSelector = confirmationSelector || defaultConfirmation;
   try {
     
     await handleCaptcha(page);
-    let selectors = await determineWhichLogin(page);
+    let selectors;
+    try {
+      selectors = await determineWhichLogin(page);
+    } catch (error) {
+      console.log('no login selectors found or encountered error')
+    }
+    console.log({selectors})
     if (selectors) {
+
       let email = await page.$(selectors.email);
       await email.type(credentials.email);
   
@@ -20,6 +30,14 @@ const attemptLoginIfExists = async (page, browser, url, timeout = 1000 * 2, clos
       let submit = await page.$(selectors.submit);
       await submit.click();
 
+    }
+
+    try {
+      await page.waitFor(linkedIn.errorHandling.skipButton, { timeout: 1000 * 0.25});
+      page.waitForNavigation({ timeout: 1000 * 1});
+      console.log('handled skip')
+    } catch (error) {
+      console.log('could not find another skip button')
     }
 
     try {
@@ -60,9 +78,13 @@ const attemptLoginIfExists = async (page, browser, url, timeout = 1000 * 2, clos
     Set isVisible to true for visual confirmation.
     If the problem persists further, the selectors used to find the login elements may be outdated.
     `)
+    console.log('bout to close page')
     await page.close()
+    console.log('opening new page')
     page = await openNewPage(browser, url)
+    console.log('reinvoking attempt login if exists')
     return await attemptLoginIfExists(page, browser, url, timeout, closePage, confirmationSelector, count, max);
+  
   }
 }
 

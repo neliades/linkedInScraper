@@ -1,0 +1,183 @@
+{
+    "companies": [
+      {
+        "overview": {
+          "name": "Google",
+          "website": "www.google.com",
+          "size": "10000+ employees",
+
+
+          //foreign
+          "industry": "Internet",
+
+
+          //"headquarters": "Mountain View, CA",
+          //"founded": "1998",
+          //"type": "Company - Public (GOOG)",
+          //"revenue": "$10+ billion (USD) per year",
+          "description": "Google is not a conventional company, and we don&rsquo;t intend to become one. True, we share attributes with the world&rsquo;s most successful organizations &ndash; a focus on innovation and smart business practices comes to mind &ndash; but even as we continue to grow, we&rsquo;re committed to retaining a small-company feel. At Google, we know that every employee has something important to say, and that every employee is integral to our success. We provide individually-tailored compensation packages that can be comprised of competitive salary, bonus, and equity components, along with the opportunity to earn further financial bonuses and rewards.<br/><br/>Googlers thrive in small, focused teams and high-energy environments, believe in the ability of technology to change the world, and are as passionate about their lives as they are about their work. For more information, visit careers.google.com.\nMission: </b>Google&rsquo;s mission is to organize the world&rsquo;s information and make it universally accessible and useful.",
+        //   "locations": [
+        //     "Ann Arbor, MI",
+        //     "Austin, TX",
+        //     "Cambridge, MA",
+        //     "Chicago, IL",
+        //     "Kirkland, WA",
+        //     "London, England",
+        //     "Los Angeles, CA",
+        //     "Mountain View, CA",
+        //     "New York, NY",
+        //     "Palo Alto, CA",
+        //     "Paris (France)",
+        //     "San Bruno, CA",
+        //     "San Francisco, CA",
+        //     "San Jose, CA",
+        //     "Seattle, WA",
+        //     "Venice, CA"
+        //   ],
+        //   "jobs": [
+        //     "L'Oreal Talent Acquisition Intern (12 Month) L'Oréal – New York, NY",
+        //     "[NYC, 6 months] Business Development intern Uppler – New York, NY",
+        //     "Intern, Characterization (3 months) pSemi – San Diego, CA",
+        //     "Software Development Manager ShopKeep – New York, NY",
+        //     "Senior Software Engineer (Python) Farfetch – New York, NY",
+        //     "Salesforce Developer / Admin Confidential – Newark, NJ",
+        //     "Legal Intern (3 months) OpenGov – Redwood City, CA",
+        //     "Software Engineer in Test Fuzz Productions – Brooklyn, NY",
+        //     "Sales Development Representative LiveAction – Stamford, CT",
+        //     "Principal Software Quality Engineer Telephonics – Farmingdale, NY"
+        //   ],
+          "inNYC": true,
+
+
+        //   //other table
+        //   "competitors": "Microsoft, Apple, Facebook"
+
+
+        },
+        "reviews": {
+          "rating": 4.4,
+          "recommended": 90,
+          "CEOApproval": 94
+        },
+
+        //other table
+        "positions": {
+          "exactMatch": {
+            "position": "Software Engineer",
+            "salary": {
+              "average": 129062,
+              "low": 82000,
+              "high": 233000
+            },
+            // "interview": {
+            //   "experience": {
+            //     "Positive": 62,
+            //     "Neutral": 25,
+            //     "Negative": 13
+            //   },
+            //   "process": {
+            //     "Applied Online": 35,
+            //     "Recruiter": 29,
+            //     "Employee Referral": 21,
+            //     "Campus Recruiting": 11,
+            //     "Other": 2,
+            //     "In Person": 1,
+            //     "Staffing Agency": 1
+            //   },
+            //   "difficulty": "3.4"
+            // }
+          },
+          "topThree": [
+            {
+              "position": "Senior Software Engineer",
+              "salary": {
+                "average": 172674,
+                "low": 99000,
+                "high": 244000
+              },
+            //   "interview": {
+            //     "experience": {
+            //       "Positive": 52,
+            //       "Negative": 31,
+            //       "Neutral": 17
+            //     },
+            //     "process": {
+            //       "Recruiter": 40,
+            //       "Applied Online": 31,
+            //       "Employee Referral": 25,
+            //       "In Person": 1,
+            //       "Other": 1,
+            //       "Staffing Agency": 1
+            //     },
+            //     "difficulty": "3.7"
+            //   }
+            },
+            {
+              "position": "Software Engineer III",
+              "salary": {
+                "average": 140366,
+                "low": 95000,
+                "high": 193000
+              },
+            //   "interview": {
+            //     "experience": {
+            //       "Positive": 82,
+            //       "Neutral": 12,
+            //       "Negative": 6
+            //     },
+            //     "process": {
+            //       "Employee Referral": 50,
+            //       "Recruiter": 19,
+            //       "Applied Online": 18,
+            //       "Campus Recruiting": 13,
+            //       "Other": 2,
+            //       "Staffing Agency": 2,
+            //       "In Person": 1
+            //     },
+            //     "difficulty": "3.4"
+            //   }
+            },
+            {
+              "position": "Software Engineer In Test",
+              "salary": {
+                "average": 115792,
+                "low": 72000,
+                "high": 195000
+              },
+            //   "interview": {
+            //     "experience": {
+            //       "Positive": 56,
+            //       "Neutral": 30,
+            //       "Negative": 14
+            //     },
+            //     "process": {
+            //       "Recruiter": 38,
+            //       "Applied Online": 29,
+            //       "Employee Referral": 17,
+            //       "Campus Recruiting": 10,
+            //       "Other": 6,
+            //       "Staffing Agency": 2,
+            //       "In Person": 1
+            //     },
+            //     "difficulty": "3.5"
+            //   }
+            }
+          ]
+        },
+        // "alsoViewed": [
+        //   "https://www.glassdoor.com/Interview/Facebook-Interview-Questions-E40772.htm",
+        //   "https://www.glassdoor.com/Interview/Facebook-Interview-Questions-E40772.htm",
+        //   "https://www.glassdoor.com/Reviews/Facebook-Reviews-E40772.htm",
+        //   "https://www.glassdoor.com/Interview/Apple-Interview-Questions-E1138.htm",
+        //   "https://www.glassdoor.com/Interview/Apple-Interview-Questions-E1138.htm",
+        //   "https://www.glassdoor.com/Reviews/Apple-Reviews-E1138.htm",
+        //   "https://www.glassdoor.com/Interview/Amazon-Interview-Questions-E6036.htm",
+        //   "https://www.glassdoor.com/Interview/Amazon-Interview-Questions-E6036.htm",
+        //   "https://www.glassdoor.com/Reviews/Amazon-Reviews-E6036.htm",
+        //   "https://www.glassdoor.com/Interview/Nest-Interview-Questions-E670862.htm",
+        //   "https://www.glassdoor.com/Interview/Nest-Interview-Questions-E670862.htm",
+        //   "https://www.glassdoor.com/Reviews/Nest-Reviews-E670862.htm"
+        // ]
+      }
+    ]
+  }

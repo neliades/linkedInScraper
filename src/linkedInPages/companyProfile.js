@@ -23,7 +23,10 @@ const companyProfile = async (browser, url, checkForLogin = false, max = 5, coun
     } catch (error) {
         count++;
         console.log(`Error capturing company profile. Attempt ${count}/${max}`);
-        if (count === 5) throw 'Terminating.'
+        if (count === 5) {
+            console.log('Terminating company capture');
+            return null;
+        }
         return companyProfile(browser, url, true, max, count);
       }
 }

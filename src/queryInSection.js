@@ -22,10 +22,10 @@ const queryFieldAndChildren = async (element, fieldKey, field, scrapedDataObject
         let fieldAttribute = field.attribute ? field.attribute : 'innerText';
         //if selecting all matches
         if (selectors) {
-          scrapedDataObject[fieldKey] = await element.$$eval(selectors, (subElements) => subElements.map(subElement => subElement.innerText), fieldAttribute);
+          scrapedDataObject[fieldKey] = await element.$$eval(selectors, (subElements, fieldAttribute) => subElements.map(subElement => subElement[fieldAttribute] || subElement.getAttribute(fieldAttribute) ), fieldAttribute);
         //if selecting one match
         } else {
-          scrapedDataObject[fieldKey] = await element.$eval(selector, (elem, fieldAttribute) => elem ? elem[fieldAttribute] : '', fieldAttribute)
+          scrapedDataObject[fieldKey] = await element.$eval(selector, (elem, fieldAttribute) => elem ? elem[fieldAttribute] || elem.getAttribute(fieldAttribute) : '', fieldAttribute)
         }
       }
     }
@@ -51,7 +51,7 @@ const queryEachField = async (elementWithChildren, sectionOfSelectorsList) => {
 
 const queryInSection = async (page, sectionOfSelectorsList) => {
   //wait for the page to find the selector, retrieve arr of elements
-  const matchingElementsArr = await page.$$(sectionOfSelectorsList.selector) //[HTML]
+  const matchingElementsArr = await page.$$(sectionOfSelectorsList.selector || sectionOfSelectorsList.selectors) //[HTML]
   let results = [];
   //for every element build a new array containing the results of the queryEachField
   for (let index in matchingElementsArr) {

@@ -9,6 +9,152 @@
                     //attributes[optional] : string (default = 'innertext')
                 //if null: no query performed, property will be saved as null
 let selectors = {
+    glassdoor : {
+      logIn : {
+        signInButton : '#TopNav .sign-in',
+        emailBox : '.modalContents input[type="email"]',
+        passwordBox : '.modalContents input[type="password"]',
+        submitButton : '.modalContents button[type="submit"]',
+        searchBox : 'header#TopNav input[id="sc.keyword"]'
+      },
+      search : {
+        searchBox: '#KeywordSearch',
+        submitButton: '#HeroSearchButton'
+
+      },
+      searchResults : {
+        footer: 'div#footer',
+        nextButton: 'div.pagingControls li.next a',
+        main: {
+          selector: 'article#MainCol',
+          fields : {
+            result : {
+              selectors: 'div.header',
+              fields: {
+                glassdoorUrl : {
+                  selector: 'a',
+                  attribute: 'href'
+                },
+                glassdoorName : 'a',
+                companyUrl : 'span span[class="subtle hideHH"]'
+              }
+            }
+          }
+        }
+
+      },
+      overview : {
+        footer : 'div#footer',
+        header : {
+          selector: 'article#WideCol',
+          fields : {
+            name: 'h1',
+            salariesLink: {
+              selector: 'div.empLinks a.salaries',
+              attribute: 'href'
+            },
+            interviewsLink: {
+              selector: 'div.empLinks a.interviews',
+              attribute: 'href'
+            },
+          }
+        },
+        main : {
+          selector : 'article#MainCol div#EmpBasicInfo',
+          fields : {
+            website : {
+              selector: 'div.info a',
+              attribute: 'href'
+            },
+            stats: {
+              selectors : 'div.infoEntity'
+            },
+            description : {
+              selectors : '[data-full]',
+              attribute: 'data-full'
+            }
+          }
+        },
+        locations : {
+          selector : 'aside#ZCol div.module.toggleable',
+          fields : {
+            locations : {
+              selectors: 'li a',
+            }
+          }
+        },
+        jobs : {
+          selector : 'aside#ZCol div.featuredJobsAdSlot',
+          fields : {
+            jobs : {
+              selectors: 'div.jobWrapper',
+            }
+          }
+        },
+        reviews : {
+          selector : 'div.empStatsAndReview',
+          fields : {
+            rating : 'div.ratingNum',
+            recommended : 'div#EmpStats_Recommend',
+            CEOApproval : 'div#EmpStats_Approve'
+          }
+        }
+      },
+      salaries : {
+        footer : 'div#footer',
+        jobTitleBox : 'article#MainCol input[type="title"]',
+        submitButton : 'article#MainCol button[type="submit"]',
+        main : {
+          selector : 'article#MainCol',
+          fields : {
+            row : {
+              selectors : 'div.salaryRow__SalaryRowStyle__row',
+              fields: {
+                jobTitle: 'a',
+                average: 'div.col-2',
+                range: {
+                  selectors: 'div.col-3 span'
+                }
+              }
+            }
+          }
+        },
+      },
+      interviews : {
+        footer : 'div#footer',
+        jobTitleBox : 'article#MainCol div.search input',
+        submitButton : 'article#MainCol div.search button',
+        main : {
+          selector : 'article#MainCol div#AllStats',
+          fields: {
+            experience : {
+              selectors : 'div.experience div.row div.row',
+              fields: {
+                type: 'label',
+                percent: 'span.num'
+              }
+            },
+            process : {
+              selectors : 'div.obtained div.row div.row',
+              fields: {
+                type: 'label',
+                percent: 'span.num'
+              }
+            },
+            difficulty : 'div.difficulty div.difficultyLabel'
+          }
+        },
+        alsoViewed : {
+          selector: 'div.similarCompanies ul.similarCompaniesList',
+          fields: {
+            links : {
+              selectors: 'li a',
+              attribute: 'href'
+            }
+          }
+        }
+      }
+    },
     linkedIn : {
         logIn : {
             emailBox : '#login-email',
@@ -175,7 +321,8 @@ let selectors = {
                 profileUrl: {
                   selector: 'a[data-control-name=search_srp_result]',
                   attribute: 'href'
-                }
+                },
+                distance: 'a[data-control-name=search_srp_result] span.distance-badge span.dist-value'
               }
             },
             pages: {
@@ -192,6 +339,11 @@ let selectors = {
             captcha: 'div.recaptcha-checkbox-checkmark',
             defaultConfirmation: 'input[role=combobox]',
             feed: 'a.js-nav-item-link.active li-icon[type="nav-small-home-icon"]',
+            signInButtons : {
+              button: 'nav a.nav__button-secondary'
+              // button2: 'p.login a.form-toggle'
+            },
+            skipButton: 'button.secondary-action',
             signIn : {
               signIn1 : {
                 email : '#login-email',

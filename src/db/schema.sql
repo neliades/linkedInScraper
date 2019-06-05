@@ -22,6 +22,7 @@ ALTER DATABASE LinkedInScraper CHARACTER SET utf8 COLLATE utf8_general_ci;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
+  `distance` INTEGER NULL DEFAULT NULL,
   `url` VARCHAR(250) NULL DEFAULT NULL,
   `headline` VARCHAR(250) NULL DEFAULT NULL,
   `location` VARCHAR(250) NULL DEFAULT NULL,
@@ -43,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `companies` (
   `website` VARCHAR(250) NULL DEFAULT NULL,
   `size` INTEGER NULL DEFAULT NULL,
   `id_industries` INTEGER NULL DEFAULT NULL,
-  `description` VARCHAR(1000) NULL DEFAULT NULL,
+  `description` VARCHAR(1500) NULL DEFAULT NULL,
   `rating` DECIMAL(6,1) NULL DEFAULT NULL,
   `recommended` INTEGER NULL DEFAULT NULL,
   `ceoApproval` INTEGER NULL DEFAULT NULL,
@@ -118,8 +119,8 @@ CREATE TABLE IF NOT EXISTS `positionsFROMcompanies` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `id_companiesFROMusers` INTEGER NULL DEFAULT NULL,
   `position` VARCHAR(250) NULL DEFAULT NULL,
-  `linkedInUrl` VARCHAR(250) NULL DEFAULT NULL,
-  `companyUrl` VARCHAR(250) NULL DEFAULT NULL,
+  -- `linkedInUrl` VARCHAR(250) NULL DEFAULT NULL,
+  -- `companyUrl` VARCHAR(250) NULL DEFAULT NULL,
   `startToEnd` VARCHAR(250) NULL DEFAULT NULL,
   `duration` VARCHAR(250) NULL DEFAULT NULL,
   `description` VARCHAR(1000) NULL DEFAULT NULL,
@@ -283,6 +284,8 @@ CREATE TABLE IF NOT EXISTS `users_companiesFROMusers` (
 CREATE TABLE IF NOT EXISTS `companiesFROMusers` (
   `id` INTEGER NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(250) NULL DEFAULT NULL,
+  `linkedInUrl` VARCHAR(250) NULL DEFAULT NULL,
+  `companyUrl` VARCHAR(250) NULL DEFAULT NULL,
   `id_companies` INTEGER NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
@@ -373,11 +376,13 @@ CREATE TABLE IF NOT EXISTS `companyPositions` (
 -- DROP TABLE IF EXISTS `companies_companyPositions`;
 		
 CREATE TABLE IF NOT EXISTS `companies_companyPositions` (
+  `id` INTEGER NOT NULL AUTO_INCREMENT,
   `id_companies` INTEGER NULL DEFAULT NULL,
   `id_companyPositions` INTEGER NULL DEFAULT NULL,
   `low` INTEGER NULL DEFAULT NULL,
   `high` INTEGER NULL DEFAULT NULL,
-  `average` INTEGER NULL DEFAULT NULL
+  `average` INTEGER NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
 );
 
 -- ---
@@ -396,8 +401,8 @@ ALTER TABLE `users_schools` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`)
 ALTER TABLE `users_schools` ADD FOREIGN KEY (id_schools) REFERENCES `schools` (`id`);
 ALTER TABLE `degrees` ADD FOREIGN KEY (id_schools) REFERENCES `schools` (`id`);
 ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_users) REFERENCES `users` (`id`);
-ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_companiesFROMusers) REFERENCES `companiesFROMusers` (`id`);
-ALTER TABLE `positionsFROMcompanies` ADD FOREIGN KEY (id_companiesFROMusers) REFERENCES `companiesFROMusers` (`id`);
+ALTER TABLE `users_companiesFROMusers` ADD FOREIGN KEY (id_companiesFROMusers) REFERENCES `companiesFROMusers` (`id`) ON DELETE SET NULL;
+ALTER TABLE `positionsFROMcompanies` ADD FOREIGN KEY (id_companiesFROMusers) REFERENCES `companiesFROMusers` (`id`) ON DELETE SET NULL;
 ALTER TABLE `companiesFROMusers` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_awards` ADD FOREIGN KEY (id_companies) REFERENCES `companies` (`id`);
 ALTER TABLE `companies_awards` ADD FOREIGN KEY (id_awards) REFERENCES `awards` (`id`);

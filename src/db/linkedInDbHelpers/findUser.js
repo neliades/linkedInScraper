@@ -23,8 +23,8 @@ const findUser = async (url) => {
           let complete = (results) => resolve(results);
 
           let desiredTablesAndFieldsObj = {
-            companiesFROMusers : ['name'],
-            positionsFROMcompanies : ['position', 'linkedInUrl', 'companyUrl', 'startToEnd', 'duration', 'description', 'location']
+            companiesFROMusers : ['name', 'linkedInUrl', 'companyUrl'],
+            positionsFROMcompanies : ['position', 'startToEnd', 'duration', 'description', 'location'],
           };
           let innerJoinsArr = [ 
             ['users'],

@@ -16,7 +16,7 @@ const openPageWithLoginCircumvention = async (browser, url, checkForLogin = fals
     if (typeof confirmationSelectors === 'string') confirmationSelectors = [confirmationSelectors];
     try { page = await openPage(browser, url); } catch (error) { throw console.log ('Could not open new page') }
     try {
-        await page.waitFor(confirmationSelectors[0], { timeout: 1000 * 0.25 });
+        await page.waitFor(confirmationSelectors[0], { timeout: 1000 * 0.5 });
     } catch(error) {
         console.log(url)
         throw console.log (`No ${pageName} found`)

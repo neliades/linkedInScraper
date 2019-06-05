@@ -3,7 +3,8 @@ const attemptLoginIfExists = require('./pageHelpers/attemptLoginIfExists');
 
 const logIn = async (browser) => {
   try {
-    const url = 'https://www.linkedin.com'
+    // const url = 'https://www.linkedin.com'
+    const url = 'https://www.linkedin.com/uas/login?trk=guest_homepage-basic_nav-header-signin'
     const page = await openNewPage(browser, url)
 
     return await attemptLoginIfExists(page, browser, url, 1000 * 15, true);

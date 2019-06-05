@@ -45,8 +45,10 @@ const userSearch = async (browser, url, checkForLogin = false, max = 5, count = 
 
                 // console.log(`\nGathering info on user profile ${time.currentCount}/${time.expectedCount}`);
                 // if (time.expectedTime) console.log(`\n${time.currentCount}/${time.expectedCount} complete. Estimated time to completion: ${time.expectedTime}`);
-                let {profileUrl} = profileUrls[i];
-                let profile = await userProfile(browser, profileUrl);
+                let {profileUrl, distance} = profileUrls[i];
+                if (distance) distance = parseFloat(distance);
+                
+                let profile = await userProfile(browser, profileUrl, null, null, null, distance);
                 results.push(profile);
 
                 // console.log('tick')
